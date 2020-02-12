@@ -15,9 +15,5 @@ package com.daimler.openshift
 
 class OpenShiftEnvironment {
   // Prepare environment
-  def sout = new StringBuilder(), serr = new StringBuilder()
   def proc = '${JENKINS_PATH}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
-  proc.consumeProcessOutput(sout, serr)
-  proc.waitForOrKill(1000)
-  println "out> $sout err> $serr"
 }

@@ -15,21 +15,21 @@ package com.daimler.openshift
 
 class OpenShiftEnvironment {
     // --- Resources
-    def containerPort
     def workspace
 
     // --- Data
     def context
-    def tags
+    def prepTags
 
   // --- Constructor
   OpenShiftEnvironment(context) {
       this.context = context
       this.workspace = context.env.WORKSPACE
+      this.prepTags = '${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'
 
-      
+
       context.echo "Environment: ${this.workspace}"
-      '${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
+      this.prepTags.execute()
       load "${this.workspace}/build/config/env.files/generic.groovy"
       load "${this.workspace}/build/config/env.files/tag_env.groovy"
 

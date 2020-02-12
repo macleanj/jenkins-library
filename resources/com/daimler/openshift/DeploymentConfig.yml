@@ -1,0 +1,229 @@
+# ---------------------------------------------------------
+# DEPLOYMENT TEMPLATE
+#
+# Make sure to give the target project access to the images created
+# in the CI project.
+#
+#     oc policy add-role-to-user system:image-puller \
+#       system:serviceaccount:wltp:default \
+#       -n ci
+#
+# ---------------------------------------------------------
+
+apiVersion: v1
+kind: Template
+labels:
+  app: ${NAME}
+  template: ${NAME}-deployment-template
+  deployedFrom: ${DEPLOYED_FROM}
+metadata:
+  annotations:
+    haproxy.router.openshift.io/timeout: ${ROUTER_TIMEOUT}
+  name: ${NAME}-deployment-template
+objects:
+
+# ---------------------------------------------------------
+# DEPLOYMENT
+# ---------------------------------------------------------
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${NAME}${DEPLOY_SUFFIX}
+    namespace: ${NAMESPACE}
+    labels:
+      app: ${NAME}${DEPLOY_SUFFIX}
+  spec:
+    replicas: ${{REPLICA_COUNT}}
+    selector:
+      app: ${NAME}${DEPLOY_SUFFIX}
+      deploymentconfig: ${NAME}${DEPLOY_SUFFIX}
+    strategy:
+      type: Rolling
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+    template:
+      metadata:
+        labels:
+          app: ${NAME}${DEPLOY_SUFFIX}
+          deploymentconfig: ${NAME}${DEPLOY_SUFFIX}
+      spec:
+        containers:
+          - image: docker-registry.default.svc:5000/ci/nginx-sidecar-basic-auth
+            imagePullPolicy: Always
+            name: auth-proxy
+            ports:
+              - containerPort: 8087
+                protocol: TCP
+            resources:
+              requests:
+                memory: 80Mi
+              limits:
+                memory: 96Mi
+            env:
+              - name: FORWARD_PORT
+                value: ${CONTAINER_PORT}
+              - name: BASIC_AUTH_USERNAME
+                value: futurice
+              - name: BASIC_AUTH_PASSWORD
+                value: wltp2018
+          - image:
+            imagePullPolicy: Always
+            name: ${IMAGE_STREAM}-container
+            ports:
+            - containerPort: ${{CONTAINER_PORT}}
+              protocol: TCP
+            resources:
+              requests:
+                memory: ${MEMORY_REQUEST}
+              limits:
+                memory: ${MEMORY_LIMIT}
+            envFrom:
+              - configMapRef:
+                  name: ${CONFIG_MAP}
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: false
+        containerNames:
+        - ${IMAGE_STREAM}-container
+        from:
+          kind: ImageStreamTag
+          name: ${IMAGE_STREAM}:${IMAGE_STREAM_TAG}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+
+# ---------------------------------------------------------
+# SERVICE
+# ---------------------------------------------------------
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${NAME}${DEPLOY_SUFFIX}
+    name: ${NAME}${DEPLOY_SUFFIX}
+    namespace: ${NAMESPACE}
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8087
+    selector:
+      app: ${NAME}${DEPLOY_SUFFIX}
+      deploymentconfig: ${NAME}${DEPLOY_SUFFIX}
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+
+# ---------------------------------------------------------
+# ROUTE
+# ---------------------------------------------------------
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${NAME}${DEPLOY_SUFFIX}
+    name: ${NAME}${DEPLOY_SUFFIX}
+    namespace: ${NAMESPACE}
+  spec:
+    host: ${HOSTNAME}
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: ${NAME}${DEPLOY_SUFFIX}
+      weight: 100
+    wildcardPolicy: None
+
+# ---------------------------------------------------------
+# PARAMETERS
+# ---------------------------------------------------------
+parameters:
+- name: NAME
+  displayName: Application Name
+  description: The name of the application
+  required: true
+
+- name: NAMESPACE
+  displayName: Application Namespace
+  description: The project the application will be created in
+  required: true
+
+- name: CONTAINER_PORT
+  displayName: Container Port
+  description: The port the main application will be exposed on
+  required: true
+  value: '8080'
+
+- name: HOSTNAME
+  displayName: Route Hostname
+  description: The hostname used to create the route pointing at this application
+  required: false
+
+- name: IMAGE_STREAM_NAMESPACE
+  displayName: ImageStream Namespace
+  description: Project that image stream was published to
+  required: true
+  value: ci
+
+- name: IMAGE_STREAM
+  displayName: ImageStream
+  description: ImageStream to pull images from
+  required: true
+
+- name: IMAGE_STREAM_TAG
+  displayName: Image Tag
+  description: Tag to use for pulling the application image
+  required: true
+  value: latest
+
+- name: REPLICA_COUNT
+  displayName: Number of Replicas
+  description: The number of replicas for this application
+  required: true
+  value: '1'
+
+- name: MEMORY_LIMIT
+  displayName: Memory Limit
+  description: Maximum memory to allocate for this application
+  required: true
+  value: 256Mi
+
+- name: MEMORY_REQUEST
+  displayName: Memory Request
+  description: Memory to allocate for this application at startup
+  required: true
+  value: 128Mi
+
+- name: DEPLOY_SUFFIX
+  displayName: Deploy Suffix
+  description: Suffix to use for the deployment
+  value:
+
+- name: DEPLOYED_FROM
+  displayName: Deployed From
+  description: Deployment type ('pullRequest', 'master', 'branch')
+  required: true
+  value: master
+
+- name: CONFIG_MAP
+  displayName: Config Map
+  description: The name of the config map
+  required: true
+
+- name: ROUTER_TIMEOUT
+  displayName: Router Timeout
+  description: Timeout between OpenShift router and service
+  required: true
+  value: 30s

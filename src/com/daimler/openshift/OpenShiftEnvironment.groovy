@@ -26,7 +26,6 @@ class OpenShiftEnvironment {
   OpenShiftEnvironment(context) {
       this.context = context
       this.JENKINS_PATH = env.WORKSPACE
-      context.echo "Environment: ${env}"
       context.echo "Environment: ${this.JENKINS_PATH}"
       // '${JENKINS_PATH}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
       // 'printenv | sort'.execute()

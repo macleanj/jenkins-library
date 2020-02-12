@@ -14,18 +14,25 @@ package com.daimler.openshift
 // ----------------------------------------------------
 
 class OpenShiftEnvironment {
+    // --- Resources
+    def containerPort
+
     // --- Data
     def context
+    def tags
 
   // --- Constructor
   OpenShiftEnvironment(context) {
       this.context = context
-      context.echo "Environment:"
-      'printenv | sort'.execute()
+      this.appName = context.env.JENKINS_PATH
+
+      context.echo "Environment: ${this.JENKINS_PATH}"
+      // '${JENKINS_PATH}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
+      // 'printenv | sort'.execute()
 
 
 
-      // def proc = '${JENKINS_PATH}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
+
 
       // this.appName = context.env.APP_NAME
       // this.branchName = context.env.GIT_BRANCH

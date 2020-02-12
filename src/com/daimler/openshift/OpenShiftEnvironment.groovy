@@ -25,7 +25,7 @@ class OpenShiftEnvironment {
   OpenShiftEnvironment(context) {
       this.context = context
       this.workspace = context.env.WORKSPACE
-      this.prepTags = '${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'
+      this.prepTags = "${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d"
 
 
       context.echo "Environment: ${this.workspace}"

@@ -16,7 +16,7 @@ package com.daimler.openshift
 class OpenShiftEnvironment {
     // --- Resources
     def containerPort
-    def JENKINS_PATH
+    def workspace
 
     // --- Data
     def context
@@ -25,9 +25,14 @@ class OpenShiftEnvironment {
   // --- Constructor
   OpenShiftEnvironment(context) {
       this.context = context
-      this.JENKINS_PATH = context.env.WORKSPACE
-      context.echo "Environment: ${this.JENKINS_PATH}"
-      // '${JENKINS_PATH}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
+      this.workspace = context.env.WORKSPACE
+
+      
+      context.echo "Environment: ${this.workspace}"
+      '${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d'.execute()
+      load "${this.workspace}/build/config/env.files/generic.groovy"
+      load "${this.workspace}/build/config/env.files/tag_env.groovy"
+
       // 'printenv | sort'.execute()
 
 

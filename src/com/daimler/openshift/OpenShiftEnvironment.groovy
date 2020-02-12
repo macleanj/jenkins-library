@@ -14,6 +14,8 @@ package com.daimler.openshift
 // ----------------------------------------------------
 
 class OpenShiftEnvironment {
+    // --- Data
+    def context
 
   // --- Constructor
   OpenShiftEnvironment(context) {

@@ -13,7 +13,7 @@ CICD_TAGS_NAME=$1
 GIT_COMMIT_SHORT=$2
 
 source $programDir/_confConvert.conf
-source $LIB_CICD_CONF_DIR/generic.conf
+source $programDir/$LIB_CICD_CONF_DIR/generic.conf
 
 buildTagType=$CICD_TAGS_BUILD_TAG
 deployTagType=$CICD_TAGS_DEPLOY_TAG

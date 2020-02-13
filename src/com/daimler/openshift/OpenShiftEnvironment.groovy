@@ -32,7 +32,7 @@ class OpenShiftEnvironment {
     this.prepTags.execute()
 
     new File("${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy").eachLine {  
-      line -> println "line : $line"; 
+      line -> Eval.me( $line ); 
     } 
     
     // load "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"

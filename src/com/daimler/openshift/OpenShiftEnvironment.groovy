@@ -28,7 +28,7 @@ class OpenShiftEnvironment {
       this.context = context
       this.workspace = context.env.WORKSPACE
       this.workspace_lib = "${this.workspace}/../workspace@libs/cicd-daimler-wltp-sim"
-      this.envGeneric = "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy".toString()
+      this.envGeneric = "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"
       this.prepTags = "${this.workspace_lib}/resources/com/cicd/jenkins/_confConvert.sh bv-1.00 1a2b3c4d"
 
 
@@ -39,7 +39,7 @@ class OpenShiftEnvironment {
 
   // --- Build Logic
   def loadEnv() {
-    load ( this.envGeneric )
+    load ( this.envGeneric.toString() )
     return null
   }
 }

@@ -2,6 +2,7 @@
 package com.daimler.openshift
 
 import java.io.File 
+import groovy.util.Eval
 
 // ----------------------------------------------------
 // Environment Preperation Logic
@@ -32,7 +33,7 @@ class OpenShiftEnvironment {
     this.prepTags.execute()
 
     new File("${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy").eachLine {  
-      line -> Eval.me( $line ); 
+      line -> Eval.me( "$line" ); 
     } 
     
     // load "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"

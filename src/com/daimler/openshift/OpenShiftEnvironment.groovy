@@ -33,7 +33,7 @@ class OpenShiftEnvironment {
 
   // --- Build Logic
   def loadEnv() {
-    load ( this.envGeneric.text.trim().toString() )
+    load this.envGeneric
     return null
   }
 }

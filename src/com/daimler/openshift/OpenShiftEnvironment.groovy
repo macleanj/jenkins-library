@@ -2,15 +2,11 @@
 package com.daimler.openshift
 
 // ----------------------------------------------------
-// Build/Deployment Logic
-// * relies on the environment to configure itself
-// * uses common templates bundled with the library
+// Environment Preperation Logic
+// * relies on the trigger by tag methodology
 //
 // Required Environment:
-// * NAME: Application to build
-// * S2I: Builder image to use
-// * GIT_BRANCH: Branch to build (usually provided by Jenkins)
-// * GIT_COMMIT: Commit to build (usually provided by Jenkins)
+// * WORKSPACE: The workspace of te Jenkins build (usually provided by Jenkins)
 // ----------------------------------------------------
 
 class OpenShiftEnvironment {
@@ -20,12 +16,10 @@ class OpenShiftEnvironment {
     def envGeneric
 
     // --- Data
-    def context
     def prepTags
 
   // --- Constructor
   OpenShiftEnvironment(context) {
-      this.context = context
       this.workspace = context.env.WORKSPACE
       this.workspace_lib = "${this.workspace}/../workspace@libs/cicd-daimler-wltp-sim"
       this.envGeneric = "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"

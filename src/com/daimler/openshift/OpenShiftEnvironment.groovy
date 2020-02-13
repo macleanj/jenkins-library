@@ -31,11 +31,10 @@ class OpenShiftEnvironment {
     // context.echo "Environment: ${this.workspace}"
     this.prepTags.execute()
 
-    static void main(String[] args) { 
-      new File("${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy").eachLine {  
-        line -> println "line : $line"; 
-      } 
+    new File("${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy").eachLine {  
+      line -> println "line : $line"; 
     } 
+    
     // load "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"
     // load ( "${this.workspace}/../workspace@libs/cicd-daimler-wltp-sim/resources/com/cicd/jenkins/env.files/tag_env.groovy"toString() )
     }

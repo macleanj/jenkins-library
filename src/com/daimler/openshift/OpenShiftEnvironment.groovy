@@ -32,10 +32,9 @@ class OpenShiftEnvironment {
 
       context.echo "Environment: ${this.workspace}"
       this.prepTags.execute()
-      // load ( ${this.workspace}/build/config/env.files/generic.groovy )
-      // load ( ${this.workspace}/build/config/env.files/tag_env.groovy )
+      load ( "$this.workspace/../workspace@libs/cicd-daimler-wltp-sim/resources/com/cicd/jenkins/env.files/generic.groovy" )
+      load ( "$this.workspace/../workspace@libs/cicd-daimler-wltp-sim/resources/com/cicd/jenkins/env.files/tag_env.groovy" )
 
-      // 'printenv | sort'.execute()
 
 
 

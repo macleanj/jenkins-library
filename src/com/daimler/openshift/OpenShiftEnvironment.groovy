@@ -32,8 +32,9 @@ class OpenShiftEnvironment {
     // context.echo "Environment: ${this.workspace}"
     this.prepTags.execute()
 
+    // Source/load variable files
     new File("${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy").eachLine {  
-      line -> Eval.me( "$line" ); 
+      line -> "$line"
     } 
     
     // load "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"

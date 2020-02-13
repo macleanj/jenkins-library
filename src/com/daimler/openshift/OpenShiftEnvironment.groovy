@@ -16,6 +16,7 @@ package com.daimler.openshift
 class OpenShiftEnvironment {
     // --- Resources
     def workspace
+    def workspace_lib
 
     // --- Data
     def context

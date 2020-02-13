@@ -25,13 +25,14 @@ class OpenShiftEnvironment {
   OpenShiftEnvironment(context) {
       this.context = context
       this.workspace = context.env.WORKSPACE
-      this.prepTags = "${this.workspace}/build/config/_confConvert.sh bv-1.00 1a2b3c4d"
+      this.workspace_lib = "${this.workspace}/workspace\@libs"
+      this.prepTags = "${this.workspace_lib}/resources/com/cicd/jenkins/_confConvert.sh bv-1.00 1a2b3c4d"
 
 
       context.echo "Environment: ${this.workspace}"
       this.prepTags.execute()
-      load ( ${this.workspace}/build/config/env.files/generic.groovy )
-      load ( ${this.workspace}/build/config/env.files/tag_env.groovy )
+      // load ( ${this.workspace}/build/config/env.files/generic.groovy )
+      // load ( ${this.workspace}/build/config/env.files/tag_env.groovy )
 
       // 'printenv | sort'.execute()
 

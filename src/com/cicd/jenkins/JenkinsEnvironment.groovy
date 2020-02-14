@@ -32,13 +32,13 @@ class JenkinsEnvironment {
     this.tagName = context.env.TAG_NAME ?: ''
     this.changeId = context.env.CHANGE_ID ?: ''
 
-    context.echo "Trigger by tag: git_commit ${context.env.GIT_COMMIT}"
-    context.echo "Trigger by tag: tag_name ${context.env.TAG_NAME}"
-    context.echo "Trigger by tag: change_id ${context.env.CHANGE_ID}"
+    context.echo "Trigger by tag: git_commit ${this.gitCommit}"
+    context.echo "Trigger by tag: tag_name ${this.tagName}"
+    context.echo "Trigger by tag: change_id ${this.changeId}"
 
     this.workspace = context.env.WORKSPACE
-    this.workspace_lib = "${this.workspace}/../workspace@libs/cicd"
-    this.prepTags = "${this.workspace_lib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${this.gitCommit} -tag_name ${this.tagName} -change_id ${this.changeId}"
+    this.workspaceLib = "${this.workspace}/../workspace@libs/cicd"
+    this.prepTags = "${this.workspaceLib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${this.gitCommit} -tag_name ${this.tagName} -change_id ${this.changeId}"
     this.prepTags.execute()
   }
 }

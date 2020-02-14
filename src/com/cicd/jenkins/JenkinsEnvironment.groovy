@@ -22,14 +22,7 @@ class OpenShiftEnvironment {
   JenkinsEnvironment(context) {
     this.workspace = context.env.WORKSPACE
     this.workspace_lib = "${this.workspace}/../workspace@libs/cicd"
-    // this.envGeneric = "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"
     this.prepTags = "${this.workspace_lib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${context.env.GIT_COMMIT} -tag_name ${context.env.TAG_NAME} -change_id ${context.env.CHANGE_ID}"
-
-
-    // context.echo "Environment: ${this.workspace}"
     this.prepTags.execute()
-
-    // load "${this.workspace_lib}/resources/com/cicd/jenkins/env.files/generic.groovy"
-    // load ( "${this.workspace}/../workspace@libs/cicd-daimler-wltp-sim/resources/com/cicd/jenkins/env.files/tag_env.groovy"toString() )
-    }
   }
+}

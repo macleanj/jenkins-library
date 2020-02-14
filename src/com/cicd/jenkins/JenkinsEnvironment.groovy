@@ -19,7 +19,7 @@ class JenkinsEnvironment {
   // def envGeneric
 
   // --- Data
-  def prepTags
+  def prepEnvCmd
 
   // --- Constructor
   JenkinsEnvironment(context) {
@@ -38,7 +38,11 @@ class JenkinsEnvironment {
 
     this.workspace = context.env.WORKSPACE
     this.workspaceLib = "${this.workspace}/../workspace@libs/cicd"
-    this.prepTags = "${this.workspaceLib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${this.gitCommit} -tag_name ${this.tagName} -change_id ${this.changeId}"
-    this.prepTags.execute()
+    this.prepEnvCmd = "${this.workspaceLib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${this.gitCommit} -tag_name ${this.tagName} -change_id ${this.changeId}"
+    
+    // --- Build Logic
+    def prepareEnv() {
+      this.prepEnvCmd.execute()
+    }
   }
 }

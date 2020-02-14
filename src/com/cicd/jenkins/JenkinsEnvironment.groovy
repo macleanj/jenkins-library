@@ -3,13 +3,13 @@ package com.cicd.jenkins
 
 // ----------------------------------------------------
 // Environment Preperation Logic
-// * relies on the trigger by tag methodology
+// * facilitates the trigger by tag methodology
 //
 // Required Environment:
 // * WORKSPACE: The workspace of te Jenkins build (usually provided by Jenkins)
 // ----------------------------------------------------
 
-class OpenShiftEnvironment {
+class JenkinsEnvironment {
   // --- Resources
   def workspace
   def workspace_lib

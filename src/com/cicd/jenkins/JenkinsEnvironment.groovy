@@ -40,9 +40,10 @@ class JenkinsEnvironment {
     this.workspaceLib = "${this.workspace}/../workspace@libs/cicd"
     this.prepEnvCmd = "${this.workspaceLib}/resources/com/cicd/jenkins/prepEnv.sh -git_commit ${this.gitCommit} -tag_name ${this.tagName} -change_id ${this.changeId}"
     
-    // --- Build Logic
-    def prepareEnv() {
-      this.prepEnvCmd.execute()
-    }
+  }
+  
+  // --- Build Logic
+  def prepareEnv() {
+    this.prepEnvCmd.execute()
   }
 }

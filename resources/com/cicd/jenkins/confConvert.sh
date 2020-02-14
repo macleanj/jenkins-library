@@ -5,33 +5,24 @@ now=$(date +%Y-%m-%d\ %H:%M:%S)
 programName=$(basename $0)
 programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
-envDir="env.files"
 debug=0
 
-source $programDir/$baseName.conf
-
 cd $programDir
-rm -rf ${envDir}
-mkdir -p ${envDir}
-
-# Execute tag creation first
-CICD_TAGS_NAME=$1
-GIT_COMMIT_SHORT=$2
-$programDir/_prepTagEnvConvert.sh $CICD_TAGS_NAME $GIT_COMMIT_SHORT
-
+source prepEnv.conf
+source $baseName.conf
 
 # Continue with conversion of environment files
-for file in ${envDir}/tag_env.conf $(ls $LIB_CICD_CONF_DIR/*.conf); do
+for file in $(ls $CICD_FILES_DIR/*.conf); do
   [ $debug -eq 1 ] && echo "Processing $file"
 
   # Get basename of the file
   baseNameFile=$(echo ${file} | sed -e 's/.*\///g' | sed -e 's/.conf//g')
   
   # Prepare file(s) for environment variable format
-  echo -n > ${envDir}/${baseNameFile}.env
+  # echo -n > ${CICD_FILES_DIR}/${baseNameFile}.env
 
   # Prepare file(s) for groovy format
-  echo -n > ${envDir}/${baseNameFile}.groovy
+  echo -n > ${CICD_FILES_DIR}/${baseNameFile}.groovy
 
   # Convert
   OLDIFS=$IFS
@@ -46,10 +37,10 @@ for file in ${envDir}/tag_env.conf $(ls $LIB_CICD_CONF_DIR/*.conf); do
     [[ ! $value =~ ^\" ]] && value="\"$value\""
 
     # Environment variable format
-    echo "$key=$value" >> ${envDir}/${baseNameFile}.env
+    # echo "$key=$value" >> ${CICD_FILES_DIR}/${baseNameFile}.env
 
     # Environment groovy format
-    echo "env.$key=$value" >> ${envDir}/${baseNameFile}.groovy
+    echo "env.$key=$value" >> ${CICD_FILES_DIR}/${baseNameFile}.groovy
 
   done
   IFS=$OLDIFS

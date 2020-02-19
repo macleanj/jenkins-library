@@ -5,8 +5,6 @@ programName=$(basename $0)
 programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 
-echo "export WORKSPACE=${1}" > WORKSPACE.conf
-source WORKSPACE.conf
 shift 1
 source $programDir/$baseName.conf
 

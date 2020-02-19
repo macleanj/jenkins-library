@@ -210,6 +210,10 @@ else
   [ $debug -eq 1 ] && echo "Triggered by unknown source. Disabled"
   buildEnabled=0
 fi
+if [ "$CICD_TAGS_JOBS_MULTI" == "0" ] && [ $BUILD_NUMBER -gt 1 ]; then
+  buildEnabled=0
+fi
+  
 [ $debug -eq 1 ] && echo "Build enabled: $buildEnabled"
 
 echo "CICD_BUILD_ENABLED=\"$buildEnabled\"" > ${envFile}

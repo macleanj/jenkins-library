@@ -35,7 +35,7 @@ Usage()
   echo "# d|debug    : Enable debug mode"
   echo "# "
 	echo "# Examples:"
-	echo "# ${programName}  -commit_id 1a2b3c4d123456789 -tag_id bv-1.00 -change_id changeid123"
+	echo "# ${programName}  -git_commit 1a2b3c4d123456789 -tag_name bv-1.00 -change_id changeid123"
 	echo "# "
 	echo "# "
 	echo "########################################################################################"
@@ -201,7 +201,7 @@ if [[ "$triggerType" == "tag" ]]; then
 elif [ "$triggerType" == "pullRequest" ]; then
   # This is a pullRequest
   [ $debug -eq 1 ] && echo "Triggered by Pull Request"
-  [ -f "${CICD_CONF_DIR_REPO}/${CICD_PR_CFG}.conf" ] && source "${CICD_CONF_DIR_REPO}/${CICD_PR_CFG}.conf" || source "${CICD_CONF_DIR_CENTRAL}/${CICD_PR_CFG}.conf"
+  [ -f "${CICD_CONF_DIR_REPO}/${CICD_PR_CFG}.conf" ] && source <($programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/${CICD_PR_CFG}.conf" "${CICD_CONF_DIR_REPO}/${CICD_PR_CFG}.conf") || source "${CICD_CONF_DIR_CENTRAL}/${CICD_PR_CFG}.conf"
   CICD_TAGS_PR_IMAGE_TYPE="hash"
   CICD_PR_ID=$gitHash
   buildEnabled=$CICD_PR_BUILD_ENABLED
@@ -260,7 +260,8 @@ fi
 
 source $envFile
 if [[ $CICD_DEPLOY_ENABLED == 1 ]]; then
-  [ -f "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" ] && cat "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" >> $envFile || cat "${CICD_CONF_DIR_CENTRAL}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" >> $envFile
+  [ -f "${CICD_CONF_DIR_REPO}/generic.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/generic.conf" "${CICD_CONF_DIR_REPO}/generic.conf" >> $envFile || cat "${CICD_CONF_DIR_CENTRAL}/generic.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
+  [ -f "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" >> $envFile || cat "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
 fi
 
 [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"

@@ -23,7 +23,7 @@ done
 # Check which variables are the same and make the one in FileB prevailing
 for A in $(cat "${fileA}" | egrep -v "^#|^[[:space:]]|^$"); do
   match=0
-  for B in $(cat "${fileB}" | egrep -v "^#"); do
+  for B in $(cat "${fileB}" | egrep -v "^#|^[[:space:]]|^$"); do
     keyA=$(echo "$A" | sed -e "s/[ ]*=.*//g");
     keyB=$(echo "$B" | sed -e "s/[ ]*=.*//g");
     valueB=$(echo $B | awk -F "=" '{print $2}')
@@ -43,10 +43,11 @@ done;
 # Check which variables are only in FileB and add them
 for B in $(cat "${fileB}" | egrep -v "^#|^[[:space:]]|^$"); do
   match=0
-  for A in $(cat "${fileA}" | egrep -v "^#"); do
+  keyB=$(echo "$B" | sed -e "s/[ ]*=.*//g");
+  valueB=$(echo $B | awk -F "=" '{print $2}')
+
+  for A in $(cat "${fileA}" | egrep -v "^#|^[[:space:]]|^$"); do
     keyA=$(echo "$A" | sed -e "s/[ ]*=.*//g");
-    keyB=$(echo "$B" | sed -e "s/[ ]*=.*//g");
-    valueB=$(echo $B | awk -F "=" '{print $2}')
 
     [ $debug -eq 1 ] && echo "Unique checking A / B: $keyA / $keyB"
     if [ "$keyA" == "$keyB" ]; then

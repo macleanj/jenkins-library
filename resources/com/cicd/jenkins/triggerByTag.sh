@@ -26,16 +26,17 @@ Usage()
 	echo "# Script to prepare variables based on incoming information from Jenkins"
 	echo "# Missing values are supported"
 	echo "# "
-	echo "# Usage: ${programName} -git_commit <git commit hash> -tag_name <supported tag> -change_id <changeid> [-d]"
+	echo "# Usage: ${programName} -build_number <build number> -git_commit <git commit hash> -tag_name <supported tag> -change_id <changeid> [-d]"
 	echo "# "
 	echo "# Arguments:"
-	echo "# git_commit : Deploy the GIT hooks and set options (e.g. automation type)"
-  echo "# tag_name   : Deploy the GIT hooks only (hooks file copy)"
-  echo "# change_id  : Automation script to be executed in the scripts directory"
-  echo "# d|debug    : Enable debug mode"
+	echo "# build_number : Passes the build_number"
+	echo "# git_commit   : Passes the git_commit"
+  echo "# tag_name     : Passes the tag_name"
+  echo "# change_id    : Passes the change_id"
+  echo "# d|debug      : Enable debug mode"
   echo "# "
 	echo "# Examples:"
-	echo "# ${programName}  -git_commit 1a2b3c4d123456789 -tag_name bv-1.00 -change_id changeid123"
+	echo "# ${programName} -build_number 1 -git_commit 1a2b3c4d123456789 -tag_name bv-1.00 -change_id changeid123"
 	echo "# "
 	echo "# "
 	echo "########################################################################################"
@@ -50,6 +51,15 @@ ReadParams()
 	while [ $# -gt 0 ]
 	do
 		case ${1}	in
+    "-build_number")
+			if [[ ${2} =~ ^- || -z ${2} ]]; then
+        buildNumber="None"
+  			shift 1
+      else
+        buildNumber="${2}"
+			  shift 2
+      fi
+      ;;
     "-git_commit")
 			if [[ ${2} =~ ^- || -z ${2} ]]; then
         gitHash="None"
@@ -124,32 +134,41 @@ fi
 #   buildEnabled=0
 if [[ "$triggerType" == "tag" ]]; then
   # This is a tag
-  [ $debug -eq 1 ] && echo "Triggered by tag"
+  [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"
+  [ $debug -eq 1 ] && echo -e "Triggered by tag"
   buildEnabled=1
   # Character extraction by expected format
-  # - Build: $buildTagType<imageTypeKey>-<version>. Example: bh-1.01
-  # - Deploy: $deployTagType<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
+  # - Build Single : $buildTagType<imageTypeKey>-<version>. Example: bh-1.01
+  # - Build Multi  : $buildTagType<imageTypeKey>-<appName>-<version>. Example: bv-clojure-2.8.1
+  # - Deploy       : $deployTagType<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
   tagTypeKey="${tagName:0:1}"
   imageTypeKey="${tagName:1:1}"
+  partTwo=$(echo $tagName | awk -F "-" '{print $2}')
+  partThree=$(echo $tagName | awk -F "-" '{print $3}')
   if [[ "$tagTypeKey" == "${buildTagType}" ]]; then
     tagType="build"
-    envKey="NA"
-    versionKey=$(echo $tagName | awk -F "-" '{print $2}')
+    if [ ! -z "${partThree}" ]; then
+      appName=${partTwo}
+      versionKey=${partThree}
+    else
+      versionKey=${partTwo}
+    fi
   elif [[ "$tagTypeKey" == "${deployTagType}" ]]; then
     tagType="deployment"
     envKey=$(echo $tagName | awk -F "-" '{print $2}')
     versionKey=$(echo $tagName | awk -F "-" '{print $3}')
   fi
-  [ $debug -eq 1 ] && echo "Receiving tag: $tagName"
-  [ $debug -eq 1 ] && echo "tagTypeKey: $tagTypeKey"
-  [ $debug -eq 1 ] && echo "tagType: $tagType"
-  [ $debug -eq 1 ] && echo "imageTypeKey: $imageTypeKey"
-  [ $debug -eq 1 ] && echo "envKey: $envKey"
-  [ $debug -eq 1 ] && echo "versionKey: $versionKey"
+  [ $debug -eq 1 ] && echo "Receiving tag : $tagName"
+  [ $debug -eq 1 ] && echo "tagTypeKey    : $tagTypeKey"
+  [ $debug -eq 1 ] && echo "tagType       : $tagType"
+  [ $debug -eq 1 ] && echo "imageTypeKey  : $imageTypeKey"
+  [ $debug -eq 1 ] && echo "appName       : $appName"
+  [ $debug -eq 1 ] && echo "envKey        : $envKey"
+  [ $debug -eq 1 ] && echo "versionKey    : $versionKey"
 
   # tagTypeKey character
   [[ "$tagTypeKey" != "${buildTagType}" && "$tagTypeKey" != "${deployTagType}" ]] && buildEnabled=0
-  [ $debug -eq 1 ] && echo -e "1: Enabled: $buildEnabled\n"
+  [ $debug -eq 1 ] && echo -e "1: Enabled: $buildEnabled"
 
   # imageTypeKey character
   tmpKey=" $imageTypeKey "
@@ -210,7 +229,7 @@ else
   [ $debug -eq 1 ] && echo "Triggered by unknown source. Disabled"
   buildEnabled=0
 fi
-if [ "$CICD_TAGS_JOBS_MULTI" == "0" ] && [ $BUILD_NUMBER -gt 1 ]; then
+if [ "$CICD_TAGS_JOBS_MULTI" == "0" ] && [ $buildNumber -gt 1 ]; then
   buildEnabled=0
 fi
   
@@ -261,6 +280,7 @@ else
 CICD_DEPLOY_ENABLED="0"
 EOL
 fi
+[ ! -z "${appName}" ] && echo "CICD_APP_NAME=\"$appName\"" >> ${envFile}
 
 source $envFile
 if [[ $CICD_DEPLOY_ENABLED == 1 ]]; then

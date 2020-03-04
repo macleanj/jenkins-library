@@ -185,7 +185,7 @@ if [[ "$triggerType" == "tag" ]]; then
       [[ ${mapTag2imageType[$imageTypeKey]} == "hash" ]] && CICD_TAGS_BUILD_VERSION=$gitHash
 
       # Build tag format
-      [[ ! $tagName =~ ^[a-z]+-[0-9.]+$ ]] && buildEnabled=0
+      if [[ ! $tagName =~ ^[a-z]+-[0-9.]+$ ]] && [[ ! $tagName =~ ^[a-z]+-[\_a-z0-9.]+-[0-9.]+$ ]]; then buildEnabled=0; fi
       [ $debug -eq 1 ] && echo -e "3: Enabled: $buildEnabled"
     elif [[ "$tagType" == "deployment" ]]; then
       # Deploy tag received
@@ -275,12 +275,12 @@ CICD_TAGS_ID="None"
 CICD_DEPLOY_ENABLED="0"
 EOL
   fi
+  [ ! -z "${appName}" ] && echo "CICD_APP_NAME=\"$appName\"" >> ${envFile}
 else
   cat >> ${envFile} <<EOL
 CICD_DEPLOY_ENABLED="0"
 EOL
 fi
-[ ! -z "${appName}" ] && echo "CICD_APP_NAME=\"$appName\"" >> ${envFile}
 
 source $envFile
 if [[ $CICD_DEPLOY_ENABLED == 1 ]]; then

@@ -179,6 +179,8 @@ if [[ "$triggerType" == "tag" ]]; then
   if [[ $buildEnabled == 1 ]]; then
     if [[ "$tagType" == "build" ]]; then
       # Build tag received
+      [ -f "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf" ] && source <($programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf" "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf") || source "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf"
+
       CICD_TAGS_BUILD_IMAGE_TYPE=${mapTag2imageType[$imageTypeKey]}
       CICD_TAGS_BUILD_ENV="NA"
       CICD_TAGS_BUILD_VERSION=${versionKey}
@@ -246,6 +248,7 @@ CICD_TAGS_IMAGE_TYPE="$CICD_TAGS_BUILD_IMAGE_TYPE"
 CICD_TAGS_ID="$CICD_TAGS_BUILD_VERSION"
 CICD_DEPLOY_ENABLED="0"
 EOL
+      [ ! -z "${appName}" ] && echo "CICD_APP_NAME=\"$appName\"" >> ${envFile}
     elif [[ "$tagType" == "deployment" ]]; then
       # Deploy tag received
       cat >> ${envFile} <<EOL
@@ -275,7 +278,6 @@ CICD_TAGS_ID="None"
 CICD_DEPLOY_ENABLED="0"
 EOL
   fi
-  [ ! -z "${appName}" ] && echo "CICD_APP_NAME=\"$appName\"" >> ${envFile}
 else
   cat >> ${envFile} <<EOL
 CICD_DEPLOY_ENABLED="0"

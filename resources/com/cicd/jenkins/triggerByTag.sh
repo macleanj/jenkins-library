@@ -179,8 +179,6 @@ if [[ "$triggerType" == "tag" ]]; then
   if [[ $buildEnabled == 1 ]]; then
     if [[ "$tagType" == "build" ]]; then
       # Build tag received
-      [ -f "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf" ] && source <($programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf" "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf") || source "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf"
-
       CICD_TAGS_BUILD_IMAGE_TYPE=${mapTag2imageType[$imageTypeKey]}
       CICD_TAGS_BUILD_ENV="NA"
       CICD_TAGS_BUILD_VERSION=${versionKey}
@@ -285,10 +283,14 @@ EOL
 fi
 
 source $envFile
-if [[ $CICD_DEPLOY_ENABLED == 1 ]]; then
+if [[ $CICD_BUILD_ENABLED == 1 ]]; then
   [ -f "${CICD_CONF_DIR_REPO}/generic.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/generic.conf" "${CICD_CONF_DIR_REPO}/generic.conf" >> $envFile || cat "${CICD_CONF_DIR_CENTRAL}/generic.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
-  [ -f "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" >> $envFile || cat "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
+  [ -f "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf" "${CICD_CONF_DIR_REPO}/${CICD_BUILD_CFG}.conf" >> $envFile || cat "${CICD_CONF_DIR_CENTRAL}/${CICD_BUILD_CFG}.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
 fi
+if [[ $CICD_DEPLOY_ENABLED == 1 ]]; then
+  [ -f "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" ] && $programDir/confMerge.sh "${CICD_CONF_DIR_CENTRAL}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" "${CICD_CONF_DIR_REPO}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" >> $envFile || cat "${CICD_CONF_DIR_CENTRAL}/deploy_${CICD_TAGS_DEPLOY_ENVIRONMENT}.conf" | egrep -v "^#|^[[:space:]]|^$" >> $envFile
+fi
+sort -o $envFile $envFile
 
 [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"
 [ $debug -eq 1 ] && echo "Final config:"

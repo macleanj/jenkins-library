@@ -1,1 +1,1 @@
-Example configurations
+Example configurations. For DEVELOPMENT purposes only

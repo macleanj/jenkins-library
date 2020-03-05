@@ -1,4 +1,4 @@
-package com.globalVars
+// package com.globalVars
 
 class globalVars {
   final Integer buildThrottle = 1

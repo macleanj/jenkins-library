@@ -148,7 +148,7 @@ if [[ "$triggerType" == "tag" ]]; then
   if [[ "$tagTypeKey" == "${buildTagType}" ]]; then
     tagType="build"
     if [ ! -z "${partThree}" ]; then
-      appName=${partTwo}
+      appName=$(echo ${partTwo} | sed -e 's/_/-/g')
       versionKey=${partThree}
     else
       versionKey=${partTwo}
@@ -246,7 +246,7 @@ CICD_TAGS_IMAGE_TYPE="$CICD_TAGS_BUILD_IMAGE_TYPE"
 CICD_TAGS_ID="$CICD_TAGS_BUILD_VERSION"
 CICD_DEPLOY_ENABLED="0"
 EOL
-      [ ! -z "${appName}" ] && echo "CICD_TAG_APP_NAME=\"$appName\"" >> ${envFile}
+      [ ! -z "${appName}" ] && echo "CICD_TAGS_APP_NAME=\"$appName\"" >> ${envFile}
     elif [[ "$tagType" == "deployment" ]]; then
       # Deploy tag received
       cat >> ${envFile} <<EOL

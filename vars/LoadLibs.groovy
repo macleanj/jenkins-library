@@ -10,6 +10,7 @@
 
 def call(context) {
   def cicd = [:] 
+  def cicd.env = [:] 
 
   // GitUtils gitUtils = new GitUtils()
   // String currentBranch = (String) env.BRANCH_NAME
@@ -17,17 +18,17 @@ def call(context) {
   // DeploymentUtils deployUtils = new DeploymentUtils()
 
   // Determine trigger type
-  cicd.triggerType = 'unknown'
+  cicd.env.triggerType = 'unknown'
   if (context.env.CHANGE_ID) {
-    cicd.triggerType = 'pullRequest'
+    cicd.env.triggerType = 'pullRequest'
   } else if (context.env.TAG_NAME) {
-    cicd.triggerType = 'tag'
+    cicd.env.triggerType = 'tag'
   } else if (context.env.TAG_NAME) {
     // Reserved for Feature
-    cicd.triggerType = 'feature'
+    cicd.env.triggerType = 'feature'
   }
 
-  context.echo "LoadLibs entry variables: ${cicd.triggerType}"
+  context.echo "LoadLibs entry variables: ${cicd.env.triggerType}"
 
   // if (gitUtils.isTag(currentTag)) {
   //   String tagName = env.TAG_NAME

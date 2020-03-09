@@ -9,10 +9,10 @@
  */
 
 def call(context) {
-  def cicd = [
-    env:[:],
-    config:[:]
-  ]
+  
+  // http://groovyandgrails.blogspot.com/2013/05/groovy-maps-nested.html
+  def cicd = [:]
+  cicd["env"] = [:]
 
   // GitUtils gitUtils = new GitUtils()
   // String currentBranch = (String) env.BRANCH_NAME

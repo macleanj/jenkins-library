@@ -14,8 +14,8 @@ def call(context) {
   def cicd = [:]
   cicd["env"] = ["test":1]
 
-  println map["env"]["test"]
-	println map."env"."test"
+  println cicd["env"]["test"]
+	println cicd."env"."test"
 
   // GitUtils gitUtils = new GitUtils()
   // String currentBranch = (String) env.BRANCH_NAME

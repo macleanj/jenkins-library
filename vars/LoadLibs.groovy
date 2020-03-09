@@ -9,7 +9,7 @@
  */
 
 def call(context) {
-  def cicd = [:]
+  def cicd = [:[:]]
   // cicd.env = [:]
 
   // GitUtils gitUtils = new GitUtils()

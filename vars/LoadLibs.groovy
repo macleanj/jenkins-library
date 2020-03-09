@@ -10,7 +10,8 @@
 
 def call(context) {
   def cicd = [:]
-  cicd.env = [:]
+  def env = [:]
+  cicd.env = env
 
   // GitUtils gitUtils = new GitUtils()
   // String currentBranch = (String) env.BRANCH_NAME

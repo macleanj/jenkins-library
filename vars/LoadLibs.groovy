@@ -12,7 +12,10 @@ def call(context) {
   
   // http://groovyandgrails.blogspot.com/2013/05/groovy-maps-nested.html
   def cicd = [:]
-  cicd["env"] = [:]
+  cicd["env"] = ["test":1]
+
+  println map["env"]["test"]
+	println map."env"."test"
 
   // GitUtils gitUtils = new GitUtils()
   // String currentBranch = (String) env.BRANCH_NAME
@@ -30,7 +33,7 @@ def call(context) {
     cicd.env.triggerType = 'feature'
   }
 
-  context.echo "LoadLibs entry variables: ${cicd.env.triggerType}"
+  // context.echo "LoadLibs entry variables: ${cicd.env.triggerType}"
 
   // if (gitUtils.isTag(currentTag)) {
   //   String tagName = env.TAG_NAME

@@ -9,6 +9,6 @@ def call() {
   def sb = new Sandbox()
   def result
 
-  result = sb.execDummy(text: "a_B-c.1")
+  result = sb.cleanString(text: "a_B-c.1")
   println "My result: " + result
 }

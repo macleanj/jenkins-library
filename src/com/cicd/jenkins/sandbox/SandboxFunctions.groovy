@@ -4,11 +4,11 @@
 
 package com.cicd.jenkins.sandbox
 
-class Sandbox {
+class SandboxFunctions {
     // --- Definitions
 
     // --- Constructor
-    Sandbox() {
+    SandboxFunctions() {
     }
 
     // --- Function

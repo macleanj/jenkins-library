@@ -1,5 +1,0 @@
-Generic file for defining static global variable.
-
-- buildThrottle
-Using the trigger-by-tag principle the pipeline can be triggered multiple times for the same tag. The buildThrottle sets the max amount of builds allowed for a given job.
-Default: 1

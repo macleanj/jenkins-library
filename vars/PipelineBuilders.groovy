@@ -7,11 +7,11 @@
  **/
 import com.cicd.jenkins.tag.*
 
-def call(context) {
+def call(env) {
   println "Builder pipeline started"
-  // context.env.each { println "$it.key = $it.value" }
+  // env.each { println "$it.key = $it.value" }
 
-  def tagInfo = new TagInfo(context.env)
+  def tagInfo = new TagInfo(env)
   def result = tagInfo.get()
   result.each { println "$it.key = $it.value" }
 }

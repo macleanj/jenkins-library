@@ -107,4 +107,4 @@ context.env.WORKSPACE = "/var/jenkins_home/workspace/y-tag_poc-trigger-by-tag_bv
 
 // Executing the script
 shell  =  new GroovyShell()
-shell.parse(new File('../vars/pipelineBuilders.groovy')).call(context)
+shell.parse(new File('../vars/pipelineBuilders.groovy')).call(context.env)

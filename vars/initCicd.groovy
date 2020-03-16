@@ -1,4 +1,5 @@
-// import com.cicd.jenkins.CicdConfig as LibCicdConfig
+@Library("custom@develop") _custom
+// @Library("k8sagent@develop") _k8
 
 def call() {
   // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
@@ -20,19 +21,21 @@ def call() {
   // println exampleCustom.deploy.dev.platformName
 
   // Getting custom library config
+  // Global config for the environment
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
-  println cicdCustom
   
-  // Getting application config
+  // Getting application specific config
   node ('master') {
     stage('Initialize CICD') {
       sh 'echo "master - Stage: Initialize CICD"'
       checkout scm
       def cicdApp = readYaml file: 'config/AppConfig.yaml'
-      println cicdApp
-      if (cicd.build.job == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+      if (cicdApp.build.job == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
+
+  println cicdCustom
+  println cicdApp
 
   return cicd
 }

@@ -5,7 +5,7 @@ def call() {
   // def cicdConfig = new CicdConfig()
   // def cicd = cicdConfig.get()
 
-  props = initCicd.getCicdConfig()
+  props = cicdConfig.getCicdConfig()
   println props
 
 

@@ -1,27 +1,50 @@
-cicd:
-  job:
-    debug: 1
-    throttle: 1
-  build:
-    buildEnvironment: 'dev'
-  pr:
-    buildEnabled: 1
-    deployEnabled: 1
-    buildEnvironment: 'dev'
-  deploy:
-      dev:
-        platformName: 'dev Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-dev'
-      test:
-        platformName: 'test Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-test'
-      stag:
-        platformName: 'stag Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-stag'
-      prod:
-        platformName: 'prod Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-prod'
+containerhub.url=https://containers.cisco.com
+containerhub.repo=https://containers.cisco.com/kong-base
+devsparkroom.id=<spark_dev_id>
+opssparkroom.id=<spark_ops_id>
+
+poc.admin.dns=kong-admin.cisco.com
+poc.admin.protocol=https
+poc.admin.health=/health
+poc.admin.url=https://kong-admin.cisco.com
+
+
+poc.proxy.dns=kong-proxy.cisco.com/
+poc.api.protocol=https
+poc.proxy.health=/health
+poc.proxy.url=https://kong-proxy.cisco.com
+
+
+dev.admin.dns=kong-admin.cisco.com
+dev.admin.protocol=https
+dev.admin.health=/health
+dev.admin.url=https://kong-admin.cisco.com
+
+
+dev.proxy.dns=kong-proxy.cisco.com
+dev.api.protocol=https
+dev.proxy.health=/health
+dev.proxy.url=https://kong-proxy.cisco.com
+
+
+stg.admin.dns=kong-admin.cisco.com
+stg.admin.protocol=https
+stg.admin.health=/health
+stg.admin.url=https://kong-admin.cisco.com
+
+
+stg.proxy.dns=kong-proxy.cisco.com
+stg.api.protocol=https
+stg.proxy.health=/health
+stg.proxy.url=https://kong-proxy.cisco.com
+
+prd.admin.dns=kong-admin.cisco.com
+prd.admin.protocol=https
+prd.admin.health=/health
+prd.admin.url=https://kong-admin.cisco.com
+
+
+prd.proxy.dns=kong-proxy.cisco.com
+prd.api.protocol=https
+prd.proxy.health=/health
+prd.proxy.url=https://kong-proxy.cisco.com

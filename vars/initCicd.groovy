@@ -22,11 +22,12 @@ def call() {
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
   
   // Getting application specific config
+  def cicdApp
   node ('master') {
     stage('Initialize CICD') {
       sh 'echo "master - Stage: Initialize CICD"'
       checkout scm
-      def cicdApp = readYaml file: 'config/AppConfig.yaml'
+      cicdApp = readYaml file: 'config/AppConfig.yaml'
       if (cicdApp.build.job == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }

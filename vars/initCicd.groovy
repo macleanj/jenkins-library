@@ -5,7 +5,7 @@ def call() {
   // def cicdConfig = new CicdConfig()
   // def cicd = cicdConfig.get()
 
-  props = coiEnv.getEnvProperties
+  props = initCicd.getCicdConfig
   println props
 
 

@@ -18,7 +18,7 @@ def call() {
   // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
   def (mycicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
   println mycicdConfig
-  println mycicdConfig.deploy.dev.platformName
+  println mycicdConfig.cicd.deploy.dev.platformName
 
 
         // def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')

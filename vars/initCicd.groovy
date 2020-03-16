@@ -24,9 +24,10 @@ def call() {
     stage('Initialize CICD') {
       sh 'echo "master - Stage: Initialize CICD"'
       if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
-    def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-    println cicdObject
-
+      script {
+        def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
+        println cicdObject
+      }
     }
   }
 

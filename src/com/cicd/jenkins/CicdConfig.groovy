@@ -5,7 +5,7 @@ class CicdConfig {
   }
 
   def get() {
-    filename = "com.cicd.jenkins.CicdConfig.properties"
+    filename = "com/cicd/jenkins/CicdConfig.yaml"
     echo "DEBUG: loading filename: $filename"
     env_string = libraryResource filename
     echo "DEBUG: properties for build:\n$env_string"

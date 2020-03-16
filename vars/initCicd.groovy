@@ -1,17 +1,6 @@
 def call() {
-  // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
-
-  // Not working somehow
-  // def cicdConfig = new LibCicdConfig()
-  // def test = cicdConfig.get()
-  // println test
-
-  def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
-  cicd.build.debug = 1
-  cicd.build.throttle = 1
-  cicd.build.number = currentBuild.getNumber()
-
-
+  def buildNumber = currentBuild.getNumber()
+  
   // TEST ONLY: Getting example config
   // def (exampleCustom, exampleCustomProps) = cicdConfig('jenkins', 'CicdConfig')
   // println exampleCustom
@@ -32,8 +21,11 @@ def call() {
     }
   }
 
-  println cicdCustom
-  println cicdApp
+  println "cicdCustom : " + cicdCustom
+  println "cicdApp    : " + cicdApp
+  println "TAG_NAME   : " + TAG_NAME
+
+  // Merge yamls from here
 
   return cicd
 }

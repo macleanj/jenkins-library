@@ -1,5 +1,6 @@
-def call() {
-  def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
+def call(project, service) {
+
+  def props = libraryResource("com/cicd/${project}/${service}.yaml")
 
   // def filename = "com/cicd/jenkins/CicdConfig.yaml"
   // println "DEBUG: loading filename: $filename"

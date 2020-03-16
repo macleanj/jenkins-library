@@ -10,8 +10,8 @@ class CicdConfig {
     def env_string = libraryResource filename
     println "DEBUG: properties for build:\n$env_string"
 
-    Properties props = new Properties()
-    props.load(new ByteArrayInputStream(env_string.getBytes()))
-    return props
+    // Properties props = new Properties()
+    // props.load(new ByteArrayInputStream(env_string.getBytes()))
+    // return props
   }
 }

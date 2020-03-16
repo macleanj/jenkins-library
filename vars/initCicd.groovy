@@ -2,14 +2,11 @@ import com.cicd.jenkins.CicdConfig
 
 def call() {
   // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
-  // def cicdConfig = new CicdConfig()
-  // def cicd = cicdConfig.get()
+  def cicdConfig = new CicdConfig()
+  def cicd = cicdConfig.get()
+  println cicd
 
-  def props = cicdConfig.getCicdConfig()
-  println props
-
-
-  def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
+  // def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
   // cicd.build.debug = 1
   // cicd.build.throttle = 1
   // cicd.build.number = currentBuild.getNumber()

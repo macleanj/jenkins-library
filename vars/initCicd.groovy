@@ -16,23 +16,20 @@ def call() {
 
   // Working!!
   // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-  // def (mycicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
-  // println mycicdConfig
+  def (mycicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
+  println mycicdConfig
+  println mycicdConfig.deploy.dev.platformName
 
 
-        def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-        println cicdObject
+        // def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
+        // println cicdObject
 
-  node ('master') {
-    stage('Initialize CICD') {
-      sh 'echo "master - Stage: Initialize CICD"'
-      if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
-      // script {
-      //   def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-      //   println cicdObject
-      // }
-    }
-  }
+  // node ('master') {
+  //   stage('Initialize CICD') {
+  //     sh 'echo "master - Stage: Initialize CICD"'
+  //     if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+  //   }
+  // }
 
   return cicd
 }

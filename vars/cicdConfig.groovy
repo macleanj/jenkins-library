@@ -6,7 +6,8 @@ def call(project, service) {
   println "DEBUG: loading filename: $filename"
 
   // Start getting yaml as (nested) object
-  def objects = readYaml (file: filename)
+  def objs = readYaml text: libraryResource(filename)
+  println "DEBUG: objects for build:\n$objs"
   // END getting yaml as (nested) object
 
   // Start getting properties
@@ -17,5 +18,5 @@ def call(project, service) {
   props.load(new ByteArrayInputStream(env_string.getBytes()))
   // End getting properties
 
-  return [objects, props]
+  return [objs, props]
 }

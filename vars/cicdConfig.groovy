@@ -1,5 +1,5 @@
 def call(project, service) {
-  def debug = 1
+  def debug = 0
 
   def filename = "com/cicd/${project}/${service}.yaml"
   if (debug == 1) { println "DEBUG: loading filename: $filename" }

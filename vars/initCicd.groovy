@@ -16,9 +16,13 @@ def call() {
 
   // Working!!
   // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-  def (mycicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
-  println mycicdConfig
-  println mycicdConfig.cicd.deploy.dev.platformName
+  def (myCicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
+  println myCicdConfig
+  println myCicdConfig.deploy.dev.platformName
+
+  def (myCustomConfig, customProps) = customConfig('custom', 'CicdConfig')
+  println myCustomConfig
+  println myCustomConfig.cicd.deploy.dev.platformName
 
 
         // def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')

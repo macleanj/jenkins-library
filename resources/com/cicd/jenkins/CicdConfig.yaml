@@ -1,27 +1,26 @@
-cicd:
-  job:
-    debug: 1
-    throttle: 1
-  build:
-    buildEnvironment: 'dev'
-  pr:
-    buildEnabled: 1
-    deployEnabled: 1
-    buildEnvironment: 'dev'
-  deploy:
-      dev:
-        platformName: 'dev Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-dev'
-      test:
-        platformName: 'test Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-test'
-      stag:
-        platformName: 'stag Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-stag'
-      prod:
-        platformName: 'prod Kubernetes or OpenShift'
-        platformOwner: 'Owner'
-        platformNamespace: 'ns-prod'
+job:
+  debug: 0
+  throttle: 1
+build:
+  buildEnvironment: 'dev'
+pr:
+  buildEnabled: 1
+  deployEnabled: 0
+  buildEnvironment: 'dev'
+deploy:
+    dev:
+      platformName: 'dev Kubernetes or OpenShift'
+      platformOwner: 'Owner'
+      platformNamespace: 'ns-dev'
+    test:
+      platformName: 'test Kubernetes or OpenShift'
+      platformOwner: 'Owner'
+      platformNamespace: 'ns-test'
+    stag:
+      platformName: 'stag Kubernetes or OpenShift'
+      platformOwner: 'Owner'
+      platformNamespace: 'ns-stag'
+    prod:
+      platformName: 'prod Kubernetes or OpenShift'
+      platformOwner: 'Owner'
+      platformNamespace: 'ns-prod'

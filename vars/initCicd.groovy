@@ -22,8 +22,7 @@ def call() {
   // Getting custom library config
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
   println cicdCustom
-  println cicdCustom.cicd.deploy.dev.platformName
-
+  
   // Getting application config
   node ('master') {
     stage('Initialize CICD') {

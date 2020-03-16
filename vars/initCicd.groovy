@@ -6,10 +6,13 @@ def call() {
   // def cicd = cicdConfig.get()
   // println cicd
 
-  // def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
-  // cicd.build.debug = 1
-  // cicd.build.throttle = 1
-  // cicd.build.number = currentBuild.getNumber()
+  def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
+  cicd.build.debug = 1
+  cicd.build.throttle = 1
+  cicd.build.number = currentBuild.getNumber()
+
+
+
   def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
   println props
 

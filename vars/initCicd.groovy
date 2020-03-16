@@ -14,16 +14,12 @@ def call() {
   // cicd.config.appName = "hello-world"
   // cicd.jenkins.agentLabel = cicd.config.appName.toLowerCase().replaceAll("[_]", "-")
 
-pipeline {
-    agent { label 'master' }
-    stages {
-
-        stage('Build0') {
-            steps {
-               sh 'echo "hello world0" '
-            }  
-        }
-    }
+node ('master') {
+  stage('Initialize CICD') {
+    sh 'echo "master - Stage: Initialize CICD"'
+    if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+  }
 }
+
   return cicd
 }

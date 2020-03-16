@@ -13,6 +13,7 @@ def call(Integer buildNumber) {
   cicd.jenkins.agentLabel = cicd.config.appName.toLowerCase().replaceAll("[_]", "-")
 
   println "My build: " + buildNumber
+  println "My build direct: " + currentBuild.getNumber()
 
   return cicd
 }

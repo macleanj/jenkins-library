@@ -1,10 +1,10 @@
-import com.cicd.jenkins.CicdConfig as LibCicdConfig
+// import com.cicd.jenkins.CicdConfig as LibCicdConfig
 
 def call() {
   // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
 
   // Not working somehow
-  def cicdConfig = new LibCicdConfig()
+  // def cicdConfig = new LibCicdConfig()
   // def test = cicdConfig.get()
   // println test
 
@@ -15,8 +15,8 @@ def call() {
 
 
   // Working!!
-  def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-  println props
+  // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
+  println cicdConfig()
 
   // node ('master') {
   //   stage('Initialize CICD') {

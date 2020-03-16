@@ -14,26 +14,25 @@ def call() {
   cicd.build.number = currentBuild.getNumber()
 
 
-  // Working!!
-  // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-  def (myCicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
-  println myCicdConfig
-  println myCicdConfig.deploy.dev.platformName
+  // TEST ONLY: Getting example config
+  // def (exampleCustom, exampleCustomProps) = cicdConfig('jenkins', 'CicdConfig')
+  // println exampleCustom
+  // println exampleCustom.deploy.dev.platformName
 
-  def (myCustomConfig, customProps) = customConfig('custom', 'customConfig')
-  println myCustomConfig
-  println myCustomConfig.cicd.deploy.dev.platformName
+  // Getting custom library config
+  def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
+  println cicdCustom
+  println cicdCustom.cicd.deploy.dev.platformName
 
-
-        // def cicdObject = readYaml text: libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-        // println cicdObject
-
-  // node ('master') {
-  //   stage('Initialize CICD') {
-  //     sh 'echo "master - Stage: Initialize CICD"'
-  //     if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
-  //   }
-  // }
+  // Getting application config
+  node ('master') {
+    stage('Initialize CICD') {
+      sh 'echo "master - Stage: Initialize CICD"'
+      def cicdApp = readYaml file: 'config/AppConfig.yaml')
+      println cicdApp
+      if (cicd.build.job == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+    }
+  }
 
   return cicd
 }

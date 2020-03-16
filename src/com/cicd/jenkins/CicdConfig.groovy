@@ -1,35 +1,17 @@
 package com.cicd.jenkins
 
 class CicdConfig {
-
-
-  private final def script
-
-  CicdConfig (def script) {
-    this.script = script
+  CicdConfig () {
   }
 
-  // String commitMessage() {
-  //   trimOutput("git log --format=%B -n 1 HEAD | head -n 1", 180)
-  // }
+  def get() {
+    filename = "com.cicd.jenkins.CicdConfig.properties"
+    echo "DEBUG: loading filename: $filename"
+    env_string = libraryResource filename
+    echo "DEBUG: properties for build:\n$env_string"
 
-  // String commitAuthor() {
-  //   trimOutput("git log --format=\'%an\' -n 1 HEAD", 80)
-  // }
-
-  // String commitHash() {
-  //   trimOutput("git rev-parse HEAD", 7)
-  // }
-
-  String getDir() {
-    trimOutput("pwd", 12)
+    Properties props = new Properties()
+    props.load(new ByteArrayInputStream(env_string.getBytes()))
+    return props
   }
-
-  private String trimOutput(String script, int maxLength) {
-    // String content = this.script.sh(script: script, returnStdout: true)
-    String content = sh(script: 'pwd', returnStdout: true)
-    content.substring(0, Math.min(maxLength, content.length())).trim()
-  }
-
 }
-

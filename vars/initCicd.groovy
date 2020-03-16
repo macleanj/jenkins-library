@@ -20,7 +20,7 @@ def call() {
   println myCicdConfig
   println myCicdConfig.deploy.dev.platformName
 
-  def (myCustomConfig, customProps) = customConfig('custom', 'CicdConfig')
+  def (myCustomConfig, customProps) = customConfig('custom', 'customConfig')
   println myCustomConfig
   println myCustomConfig.cicd.deploy.dev.platformName
 

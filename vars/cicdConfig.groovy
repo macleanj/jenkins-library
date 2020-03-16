@@ -1,4 +1,4 @@
-def getCicdConfig(project, service) {
+def getCicdConfig() {
   def filename = "com/cicd/jenkins/CicdConfig.yaml"
   println "DEBUG: loading filename: $filename"
   def env_string = libraryResource filename

@@ -1,5 +1,9 @@
+import com.cicd.jenkins.*
+
 def call() {
+  // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
   def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
+
   cicd.build.debug = 1
   cicd.build.throttle = 1
   cicd.build.number = currentBuild.getNumber()

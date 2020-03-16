@@ -28,7 +28,7 @@ def call() {
   node ('master') {
     stage('Initialize CICD') {
       sh 'echo "master - Stage: Initialize CICD"'
-      def cicdApp = readYaml file: 'config/AppConfig.yaml')
+      def cicdApp = readYaml file: 'config/AppConfig.yaml'
       println cicdApp
       if (cicd.build.job == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }

@@ -1,6 +1,3 @@
-@Library("custom@develop") _custom
-@Library("k8sagent@develop") _k8
-
 def call() {
   // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
 

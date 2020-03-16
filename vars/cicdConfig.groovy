@@ -17,5 +17,5 @@ def call(project, service) {
   props.load(new ByteArrayInputStream(env_string.getBytes()))
   // End getting properties
 
-  return objects props
+  return [objects, props]
 }

@@ -16,7 +16,8 @@ def call() {
 
   // Working!!
   // def props = libraryResource('com/cicd/jenkins/CicdConfig.yaml')
-  println cicdConfig('jenkins', 'CicdConfig')
+  def (mycicdConfig, cicdProps) = cicdConfig('jenkins', 'CicdConfig')
+  println mycicdConfig
 
   // node ('master') {
   //   stage('Initialize CICD') {

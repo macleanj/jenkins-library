@@ -1,9 +1,9 @@
-import com.cicd.jenkins.*
+import com.cicd.jenkins.CicdConfig
 
 def call() {
   // https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text
-
-  def cicd = CicdConfig().get()
+  def cicdConfig = new CicdConfig()
+  def cicd = cicdConfig.get()
 
 
   // def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]

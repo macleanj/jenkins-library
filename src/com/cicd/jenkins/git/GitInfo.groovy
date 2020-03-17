@@ -8,7 +8,8 @@ class GitInfo {
   // --- Resources
   def context
   def log
-
+  def loglevel
+  
   // --- Constructor
   GitInfo(context) {
     this.context = context

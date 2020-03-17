@@ -7,8 +7,8 @@ class GitInfo {
 
   def get(def String infoType) {
     def git = [:]
-    git.tagName = env.TAG_NAME ?: ''
-    git.changeId = env.CHANGE_ID ?: ''
+    git.tagName = context.env.TAG_NAME ?: ''
+    git.changeId = context.env.CHANGE_ID ?: ''
     
     if (git.changeId) {
       git.triggerType = 'pullRequest'

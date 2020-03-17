@@ -1,5 +1,5 @@
 import com.cicd.jenkins.MapMerge
-import com.cicd.jenkins.Git
+import com.cicd.jenkins.GitInfo
 
 def call() {
   def cicd = [:]

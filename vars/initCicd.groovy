@@ -1,3 +1,4 @@
+@NonCPS
 def call() {
   def cicd = [:]
   def buildNumber = currentBuild.getNumber()
@@ -27,7 +28,7 @@ def call() {
       // Merge config files
       cicd = cicdCustom.addNested( cicdApp )
       // TODO: change the below setting. This 
-      if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+      // if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
 

@@ -29,8 +29,11 @@ def call() {
       // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
       // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
       env.CICD_LOGLEVEL = cicd.loglevel
-      Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL.toString()] ])
+      // Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL.toString()] ])
+      Logger.init(this, [ logLevel: LogLevel["TRACE"] ])
       log = new Logger(this)
+
+      log.error("Between-------------------")
 
       // Get git info, incl "trigger by tag" info
       def gitInfo = new GitInfo(this)

@@ -6,12 +6,14 @@ import com.cicd.jenkins.utils.logging.Logger
 
 class GitInfo {
   // --- Resources
+  def name
   def context
   def log
   def loglevel
   
   // --- Constructor
   GitInfo(context) {
+    this.name = "GitInfo"
     this.context = context
     this.loglevel = context.env.CICD_LOGLEVEL
     context.echo "loglevel = " + this.loglevel

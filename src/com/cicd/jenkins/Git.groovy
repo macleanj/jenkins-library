@@ -3,8 +3,8 @@ package com.cicd.jenkins
 class Git {
   def info() {
     def git = [:]
-    (env.TAG_NAME) ? git.tagName = env.TAG_NAME
-    (env.CHANGE_ID) ? git.changeId = env.CHANGE_ID
+    git.tagName = env.TAG_NAME ?: ''
+    git.changeId = env.CHANGE_ID ?: ''
     
     if (git.changeId) {
       git.triggerType = 'pullRequest'

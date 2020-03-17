@@ -1,11 +1,13 @@
 import static groovy.json.JsonOutput.*
+import io.wcm.devops.jenkins.pipeline.utils.logging.LogLevel
+import io.wcm.devops.jenkins.pipeline.utils.logging.Logger
 import com.cicd.jenkins.MapMerge
 import com.cicd.jenkins.GitInfo
 
 def call() {
   def cicd = [:]
   def mapMerge = new MapMerge()
-  Integer debug
+  Logger.init(this, [ logLevel: LogLevel.INFO ])
 
   // Getting custom library config
   // Global config for the environment
@@ -26,6 +28,7 @@ def call() {
       // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
       // MIND: env.CICD_DEBUG.getClass() will LAWAYS by a String
       env.CICD_DEBUG = cicd.debug
+      Logger log = new Logger(this)
 
       // Get git info, incl "trigger by tag" info
       def gitInfo = new GitInfo(this)
@@ -38,6 +41,8 @@ def call() {
     }
   }
 
+  log.trace("I am a trace log message")
+  
   return cicd
 }
 

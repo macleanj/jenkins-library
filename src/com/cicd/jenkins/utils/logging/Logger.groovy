@@ -359,7 +359,7 @@ class Logger implements Serializable {
       }
 
       def objectString = object.toString()
-      String msg = "$name : $message -> $objectName$objectString"
+      String msg = "$name: $message -> $objectName$objectString"
       writeLogMsg(logLevel, msg)
     }
   }
@@ -373,7 +373,7 @@ class Logger implements Serializable {
   @NonCPS
   void log(LogLevel logLevel, String message) {
     if (doLog(logLevel)) {
-      String msg = "$name : $message"
+      String msg = "$name: $message"
       writeLogMsg(logLevel, msg)
     }
   }

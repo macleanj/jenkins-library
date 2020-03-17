@@ -12,6 +12,10 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
+    this.loglevel = context.env.CICD_LOGLEVEL
+    context.echo "loglevel = " + this.loglevel
+    context.echo "loglevel class = " + this.loglevel.getClass()
+
     Logger.init(this, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL.toString()] ])
     this.log = new Logger(this)
   }

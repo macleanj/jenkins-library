@@ -1,10 +1,15 @@
 package com.cicd.jenkins
 
 class GitInfo {
+  // --- Resources
+  def context
+
+  // --- Constructor
   GitInfo(context) {
     this.context = context
   }
 
+  // --- Method Logic
   def get(def String infoType) {
     def git = [:]
     git.tagName = context.env.TAG_NAME ?: ''

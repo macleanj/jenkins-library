@@ -1,12 +1,14 @@
+import groovy.util.logging.Log4j
+import org.apache.log4j.Level
 import static groovy.json.JsonOutput.*
 import com.cicd.jenkins.MapMerge
 import com.cicd.jenkins.GitInfo
 
 def call() {
+  log.setLevel(Level.INFO)
   def cicd = [:]
   def mapMerge = new MapMerge()
-  def debug
-
+    
   // Getting custom library config
   // Global config for the environment
   def (cicdGlobal, cicdGlobalProps) = globalConfig('config', 'GlobalConfig')
@@ -24,15 +26,17 @@ def call() {
       cicd = mapMerge.merge(cicdGlobal, cicdApp)
       debug = cicd.job.debug // Pass it to 'this' (context) in all methods to be able to enable global debug
       echo "DEBUG: " + debug
+      log.info "INFO--------------------------"
+      log.debug "DEBUG--------------------------"
 
 
       // Get git info, incl "trigger by tag" info
-      def gitInfo = new GitInfo(this)
-      cicd.git = gitInfo.get('byTag')
+      // def gitInfo = new GitInfo(this)
+      // cicd.git = gitInfo.get('byTag')
 
       if (debug == 1) {
-        echo "DEBUG: CICD Configuration\n" + prettyPrint(toJson(cicd))
-        echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true)
+        log.info "DEBUG: CICD Configuration\n" + prettyPrint(toJson(cicd))
+        log.info "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true)
       }
     }
   }

@@ -8,7 +8,6 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
-    this.debug = context.debug
   }
 
   // --- Method Logic

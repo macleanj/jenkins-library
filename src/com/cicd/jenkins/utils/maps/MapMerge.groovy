@@ -1,4 +1,4 @@
-package com.cicd.jenkins
+package com.cicd.jenkins.utils.maps
 
 class MapMerge {
 

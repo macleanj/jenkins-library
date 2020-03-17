@@ -5,7 +5,7 @@ import com.cicd.jenkins.GitInfo
 def call() {
   def cicd = [:]
   def mapMerge = new MapMerge()
-  def debug
+  Integer debug
 
   // Getting custom library config
   // Global config for the environment

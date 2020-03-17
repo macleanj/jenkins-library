@@ -67,6 +67,7 @@ class GitInfo {
           git.tagType="deployment"
           git.envKey = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
           git.versionKey = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
+        }
 
         log.trace("------------------------------------------------------------------------------------------")
         log.trace("Triggered by tag")
@@ -78,7 +79,7 @@ class GitInfo {
 
     return git
   }
-
+}
 //   tagTypeKey="${tagName:0:1}"
 //   imageTypeKey="${tagName:1:1}"
 //   partTwo=$(echo $tagName | awk -F "-" '{print $2}')
@@ -238,5 +239,5 @@ class GitInfo {
   // Based on the workflow "Trigger by tag"
   // def byTag(Map[] sources) {
   // }
-}
+
 

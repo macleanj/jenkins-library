@@ -60,7 +60,7 @@ class GitInfo {
           if (partThree) {
             git.appName = partTwo.text.toLowerCase().replaceAll("[_]", "-")
             git.versionKey = partThree
-          else
+          } else {
             git.versionKey = partTwo
           }
         } else if (git.tagTypeKey == TriggerByTagConstants.deployTag) {

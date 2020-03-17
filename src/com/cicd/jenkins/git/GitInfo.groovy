@@ -17,7 +17,7 @@ class GitInfo {
     context.echo "loglevel = " + this.loglevel
     context.echo "loglevel class = " + this.loglevel.getClass()
 
-    Logger.init(this, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL.toString()] ])
+    Logger.init(this, [ logLevel: LogLevel[this.loglevel] ])
     this.log = new Logger(this)
   }
 

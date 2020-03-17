@@ -2,13 +2,14 @@ package com.cicd.jenkins.git
 
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
+import com.cicd.jenkins.git.TriggerByTagConstants
 
 /*
  *
  * Tigger by tag examples, Character extraction by expected format:
- * - Build Single : $buildTagType<imageTypeKey>-<version>. Example: bh-1.01
- * - Build Multi  : $buildTagType<imageTypeKey>-<appName>-<version>. Example: bv-clojure-2.8.1
- * - Deploy       : $deployTagType<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
+ * - Build Single : $buildTag<imageTypeKey>-<version>. Example: bh-1.01
+ * - Build Multi  : $buildTag<imageTypeKey>-<appName>-<version>. Example: bv-clojure-2.8.1
+ * - Deploy       : $deployTag<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
  */
 
 class GitInfo {
@@ -43,16 +44,32 @@ class GitInfo {
       log.trace("Extending to get extensive information based on git-tag")
 
       if (git.triggerType == 'tag') { 
-        // This is a tag
-        git.buildEnabled = 1
+        log.info("Triggered by tag: tag offered")
         git.tagTypeKey = git.tagName.substring(0)
         git.imageTypeKey = git.tagName.substring(1)
-        partTwo = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
-        partThree = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
+        def partTwo = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
+        def partThree = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
+
+  // public static final String buildTag = "b"
+  // public static final String deployTag = "d"
+  // public static final String versionTag = "v"
+  // public static final String hashTag = "h"
+
+        if (git.tagTypeKey == TriggerByTagConstants.buildTag) {
+          git.tagType="build"
+          if (partThree) {
+            git.appName = partTwo.text.toLowerCase().replaceAll("[_]", "-")
+            git.versionKey = partThree
+          else
+            git.versionKey = partTwo
+          }
+        } else if (git.tagTypeKey == TriggerByTagConstants.deployTag) {
+          git.tagType="deployment"
+          git.envKey = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
+          git.versionKey = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
 
         log.trace("------------------------------------------------------------------------------------------")
         log.trace("Triggered by tag")
-        log.trace("PartTwo: " + partTwo + ", partThree: " + partThree)
         log.trace("PartTwo: " + partTwo + ", partThree: " + partThree)
       }
     }

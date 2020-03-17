@@ -8,6 +8,7 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
+    this.debug = context.env.CICD_DEBUG
   }
 
   // --- Method Logic
@@ -25,7 +26,7 @@ class GitInfo {
     }
 
     context.echo "byTag: " + infoType
-    context.echo "debug 1: " + debug
+    context.echo "debug: " + debug
 
     if (infoType == 'byTag') {
       if (debug == 1) { context.echo "Extending to get extensive information based on git-tag" }

@@ -1,5 +1,5 @@
 # Example for development only
-logging: 'INFO'
+loglevel: 'INFO'
 job:
   throttle: 1
 build:

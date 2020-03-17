@@ -1,14 +1,19 @@
 package com.cicd.jenkins.git
 
+import com.cicd.jenkins.utils.logging.LogLevel
+import com.cicd.jenkins.utils.logging.Logger
+
+
 class GitInfo {
   // --- Resources
   def context
-  def debug
+  def log
 
   // --- Constructor
   GitInfo(context) {
     this.context = context
-    this.debug = context.env.CICD_DEBUG.toInteger()
+    Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
+    log = new Logger(this)
   }
 
   // --- Method Logic
@@ -26,15 +31,15 @@ class GitInfo {
     }
 
     if (infoType == 'byTag') {
-      if (debug == 1) { context.echo "Extending to get extensive information based on git-tag" }
-      if (git.triggerType == 'tag') { 
+      context.echo "context.echo: Extending to get extensive information based on git-tag"
+      log.trace("Extending to get extensive information based on git-tag")
 
+      if (git.triggerType == 'tag') { 
         // This is a tag
-        if (debug == 1) {
-          context.echo "------------------------------------------------------------------------------------------"
-          context.echo "Triggered by tag"
-          git.buildEnabled = 1
-        }
+        git.buildEnabled = 1
+
+        log.trace("------------------------------------------------------------------------------------------")
+        log.trace("Triggered by tag")
       }
     }
 

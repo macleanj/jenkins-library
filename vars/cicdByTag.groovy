@@ -1,8 +1,8 @@
-import static groovy.json.JsonOutput.*
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
+import static groovy.json.JsonOutput.*
 
 def call() {
   def cicd = [:]
@@ -28,7 +28,8 @@ def call() {
       // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
       // MIND: env.CICD_DEBUG.getClass() will LAWAYS by a String
       env.CICD_DEBUG = cicd.debug
-      Logger.init(this, [ logLevel: LogLevel.INFO ])
+      def tessie = "INFO"
+      Logger.init(this, [ logLevel: LogLevel[tessie] ])
       log = new Logger(this)
 
       // Get git info, incl "trigger by tag" info

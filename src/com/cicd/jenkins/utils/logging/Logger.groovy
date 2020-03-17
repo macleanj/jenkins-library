@@ -20,7 +20,6 @@
 package com.cicd.jenkins.utils.logging
 
 import com.cloudbees.groovy.cps.NonCPS
-// import io.wcm.devops.jenkins.pipeline.utils.ConfigConstants
 import org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException
 import org.jenkinsci.plugins.workflow.cps.DSL
 

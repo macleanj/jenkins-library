@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.devops.jenkins.pipeline.utils.logging
+package com.cicd.jenkins.utils.logging
 
 import com.cloudbees.groovy.cps.NonCPS
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings

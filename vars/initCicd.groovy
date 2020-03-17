@@ -22,14 +22,14 @@ def call() {
   def cicdApp
   node ('master') {
     stage('Initialize CICD') {
-      sh 'echo "master - Stage: Initialize CICD"'
+      echo "master - Stage: Initialize CICD"
       checkout scm
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       // Merge config files
       // cicd = cicdCustom.addNested( cicdApp )
 
       // TODO: change the below setting. This 
-      // if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+      if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
 

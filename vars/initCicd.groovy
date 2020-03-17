@@ -1,4 +1,5 @@
 def call() {
+  def cicd = [:]
   def buildNumber = currentBuild.getNumber()
   
   // TEST ONLY: Getting example config
@@ -9,7 +10,13 @@ def call() {
   // Getting custom library config
   // Global config for the environment
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
-  
+
+  Map.metaClass.addNested = { Map rhs ->
+    def lhs = delegate
+    rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
+    lhs
+  }
+
   // Getting application specific config
   def cicdApp
   node ('master') {
@@ -17,6 +24,9 @@ def call() {
       sh 'echo "master - Stage: Initialize CICD"'
       checkout scm
       cicdApp = readYaml file: 'config/AppConfig.yaml'
+      // Merge config files
+      cicd = lhs.addNested( rhs )
+      // TODO: change the below setting. This 
       if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
@@ -27,5 +37,5 @@ def call() {
 
   // Merge yamls from here
 
-  return cicd
+  return cicdApp
 }

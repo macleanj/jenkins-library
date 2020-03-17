@@ -42,7 +42,7 @@ def call() {
     }
   }
 
-  log.trace("I am a trace log message")
+  log.error("HERE: I am a trace log message")
 
   return cicd
 }

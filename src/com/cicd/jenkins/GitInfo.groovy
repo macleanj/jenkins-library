@@ -8,6 +8,7 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
+    // this.debug = context.env.CICD_DEBUG.toInteger()
     this.debug = context.env.CICD_DEBUG
   }
 
@@ -26,13 +27,14 @@ class GitInfo {
     }
 
     context.echo "byTag: " + infoType
-    context.echo "debug: " + debug
+    context.echo "debug: " + debug.getClass()
 
     if (infoType == 'byTag') {
       if (debug == 1) { context.echo "Extending to get extensive information based on git-tag" }
       context.echo "git.triggerType: " + git.triggerType
       if (git.triggerType == 'tag') { 
-      context.echo "HERE in: " + debug
+        context.echo "HERE in: " + debug
+
         // This is a tag
         if (debug == 1) {
           context.echo "HERE in in: " + debug

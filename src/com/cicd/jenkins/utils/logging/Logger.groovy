@@ -43,7 +43,7 @@ class Logger implements Serializable {
    * @param name The name of the logger
    */
   Logger(String name = "") {
-    context.echo "Logger String"
+    echo "Logger String"
     this.name = name
   }
 
@@ -51,7 +51,7 @@ class Logger implements Serializable {
    * @param logScope The object the logger is for. The name of the logger is autodetected.
    */
   Logger(Object logScope) {
-    context.echo "Logger Object"
+    echo "Logger Object"
     if (logScope instanceof Object) {
       this.name = getClassName(logScope)
       if (this.name == null) {

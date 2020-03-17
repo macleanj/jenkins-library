@@ -28,7 +28,7 @@ def call() {
       cicd = mapMerge.merge(cicdCustom, cicdApp)
 
       // Get git info, incl "trigger by tag" info
-      cicd.git = Git.info('byTag')
+      cicd.git = git.info("byTag")
 
       if (cicd.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }

@@ -42,9 +42,9 @@ def call() {
     }
   }
 
-  log.error("HERE: I am a trace log message")
+  log.error("Error in cicdByTag")
 
-  return cicd
+  return [cicd, log]
 }
 
 // 6 TRACE   Designates finer-grained informational events than the DEBUG.

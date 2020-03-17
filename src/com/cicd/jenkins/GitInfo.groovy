@@ -1,7 +1,11 @@
 package com.cicd.jenkins
 
-class Git {
-  def info(String infoType) {
+class GitInfo {
+  GitInfo(context) {
+    this.context = context
+  }
+
+  def get(def String infoType) {
     def git = [:]
     git.tagName = env.TAG_NAME ?: ''
     git.changeId = env.CHANGE_ID ?: ''

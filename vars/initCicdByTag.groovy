@@ -5,7 +5,6 @@ def call() {
   def cicd = [:]
   def buildNumber = currentBuild.getNumber()
   def mapMerge = new MapMerge()
-  def git = new Git()
 
   // TEST ONLY: Getting example config
   // def (exampleCustom, exampleCustomProps) = cicdConfig('jenkins', 'CicdConfig')
@@ -28,7 +27,8 @@ def call() {
       cicd = mapMerge.merge(cicdCustom, cicdApp)
 
       // Get git info, incl "trigger by tag" info
-      cicd.git = git.info("byTag")
+      def gitInfo = new GitInfo(this)
+      cicd.git = gitInfo.get('byTag')
 
       if (cicd.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }

@@ -1,9 +1,11 @@
+import static groovy.json.JsonOutput.*
 import com.cicd.jenkins.MapMerge
 import com.cicd.jenkins.GitInfo
 
 def call() {
   def cicd = [:]
   def mapMerge = new MapMerge()
+  def debug
 
   // Getting custom library config
   // Global config for the environment
@@ -20,7 +22,7 @@ def call() {
       // Merge config files
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapMerge.merge(cicdGlobal, cicdApp)
-      def debug = cicd.job.debug // Pass it to 'this' (context) in all methods to be able to enable global debug
+      debug = cicd.job.debug // Pass it to 'this' (context) in all methods to be able to enable global debug
       echo "DEBUG: " + debug
 
 
@@ -29,7 +31,7 @@ def call() {
       cicd.git = gitInfo.get('byTag')
 
       if (debug == 1) {
-        echo "DEBUG: CICD Configuration\n"
+        echo "DEBUG: CICD Configuration\n" + prettyPrint(toJson(cicd))
         echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true)
       }
     }

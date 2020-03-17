@@ -25,18 +25,12 @@ class GitInfo {
       git.triggerType = 'unknown'
     }
 
-    context.echo "byTag: " + infoType
-    context.echo "debug: " + debug.getClass()
-
     if (infoType == 'byTag') {
       if (debug == 1) { context.echo "Extending to get extensive information based on git-tag" }
-      context.echo "git.triggerType: " + git.triggerType
       if (git.triggerType == 'tag') { 
-        context.echo "HERE in: " + debug
 
         // This is a tag
         if (debug == 1) {
-          context.echo "HERE in in: " + debug
           context.echo "------------------------------------------------------------------------------------------"
           context.echo "Triggered by tag"
           git.buildEnabled = 1

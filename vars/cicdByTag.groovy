@@ -22,16 +22,16 @@ def call() {
       // Merge config files
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapMerge.merge(cicdGlobal, cicdApp)
-      env.CICD_DEBUG = cicd.job.debug.toInteger() // Pass it to 'this' (context) in all methods to be able to enable global debug
-      echo "DEBUG class cicd.job.debug: " + cicd.job.debug.getClass()
-      echo "DEBUG class CICD_DEBUG: " + env.CICD_DEBUG.getClass()
-      echo "DEBUG: " + env.CICD_DEBUG
+
+      // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
+      // MIND: env.CICD_DEBUG.getClass() will LAWAYS by a String
+      env.CICD_DEBUG = cicd.debug
 
       // Get git info, incl "trigger by tag" info
       def gitInfo = new GitInfo(this)
       cicd.git = gitInfo.get('byTag')
 
-      if (cicd.job.debug == 1) {
+      if (cicd.debug == 1) {
         echo "DEBUG: CICD Configuration\n" + prettyPrint(toJson(cicd))
         echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true)
       }

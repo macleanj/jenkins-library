@@ -1,6 +1,6 @@
 # Example for development only
+debug: 0
 job:
-  debug: 0
   throttle: 1
 build:
   buildEnvironment: 'dev'

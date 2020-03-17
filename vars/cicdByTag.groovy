@@ -4,6 +4,7 @@ import static groovy.json.JsonOutput.*
 import com.cicd.jenkins.MapMerge
 import com.cicd.jenkins.GitInfo
 
+@Log4j
 def call() {
   log.setLevel(Level.INFO)
   def cicd = [:]

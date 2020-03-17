@@ -18,10 +18,12 @@ class GitInfo {
     this.loglevel = context.env.CICD_LOGLEVEL
     context.echo "loglevel = " + this.loglevel
     context.echo "loglevel class = " + this.loglevel.getClass()
+    context.echo "loglevel lookup = " + LogLevel[this.loglevel]
 
-    Logger.init(this, [ logLevel: LogLevel["TRACE"] ])
+    // Logger.init(this, [ logLevel: LogLevel["TRACE"] ])
     // Logger.init(this, [ logLevel: LogLevel[this.loglevel] ])
-    // this.log = new Logger(this)
+    Logger.init("GitInfo", [ logLevel: LogLevel["TRACE"] ])
+    this.log = new Logger(this)
   }
 
   // --- Method Logic

@@ -1,7 +1,10 @@
+import com.cicd.jenkins.MapMerge
+
 def call() {
   def cicd = [:]
   def buildNumber = currentBuild.getNumber()
-  
+  def mapMerge = new MapMerge()
+
   // TEST ONLY: Getting example config
   // def (exampleCustom, exampleCustomProps) = cicdConfig('jenkins', 'CicdConfig')
   // println exampleCustom
@@ -11,11 +14,11 @@ def call() {
   // Global config for the environment
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
 
-  Map.metaClass.addNested = { Map rhs ->
-    def lhs = delegate
-    rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
-    lhs
-  }
+  // Map.metaClass.addNested = { Map rhs ->
+  //   def lhs = delegate
+  //   rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
+  //   lhs
+  // }
 
   // Getting application specific config
   def cicdApp
@@ -26,7 +29,8 @@ def call() {
       cicdApp = readYaml file: 'config/AppConfig.yaml'
 
       // Merge config files
-      cicd = cicdCustom.addNested( cicdApp )
+      // cicd = cicdCustom.addNested( cicdApp )
+      mapMerge.merge(cicdCustom, cicdApp)
 
       // TODO: change the below setting. This 
       if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }

@@ -30,7 +30,7 @@ def call() {
 
       // Merge config files
       // cicd = cicdCustom.addNested( cicdApp )
-      mapMerge.merge(cicdCustom, cicdApp)
+      cicd = mapMerge.merge(cicdCustom, cicdApp)
 
       // TODO: change the below setting. This 
       if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }

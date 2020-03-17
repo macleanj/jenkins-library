@@ -27,16 +27,18 @@ def call() {
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       // Merge config files
       cicd = cicdCustom.addNested( cicdApp )
-      // TODO: change the below setting. This 
-      // if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
-    }
-  }
 
   println "cicdCustom : " + cicdCustom
   println "cicdApp    : " + cicdApp
   println "TAG_NAME   : " + TAG_NAME
 
   println "cicd   : " + cicd
+
+      // TODO: change the below setting. This 
+      // if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+    }
+  }
+
 
   // Merge yamls from here
 

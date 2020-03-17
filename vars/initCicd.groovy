@@ -12,11 +12,11 @@ def call() {
   // Global config for the environment
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
 
-  Map.metaClass.addNested = { Map rhs ->
-    def lhs = delegate
-    rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
-    lhs
-  }
+  // Map.metaClass.addNested = { Map rhs ->
+  //   def lhs = delegate
+  //   rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
+  //   lhs
+  // }
 
   // Getting application specific config
   def cicdApp
@@ -26,21 +26,21 @@ def call() {
       checkout scm
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       // Merge config files
-      cicd = cicdCustom.addNested( cicdApp )
-
-  println "cicdCustom : " + cicdCustom
-  println "cicdApp    : " + cicdApp
-  println "TAG_NAME   : " + TAG_NAME
-
-  println "cicd   : " + cicd
+      // cicd = cicdCustom.addNested( cicdApp )
 
       // TODO: change the below setting. This 
       // if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
 
+  println "cicdCustom : " + cicdCustom
+  println "cicdApp    : " + cicdApp
+  println "TAG_NAME   : " + TAG_NAME
 
-  // Merge yamls from here
+  // println "cicd   : " + cicd
+
+
+
 
   return cicdApp
 }

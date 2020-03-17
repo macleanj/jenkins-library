@@ -25,9 +25,11 @@ class GitInfo {
     }
 
     context.echo "byTag: " + infoType
+    context.echo "debug 1: " + debug
 
     if (infoType == 'byTag') {
       if (debug == 1) { context.echo "Extending to get extensive information based on git-tag" }
+      context.echo "git.triggerType: " + git.triggerType
       if (git.triggerType == "tag") { 
         // This is a tag
         if (debug == 1) {

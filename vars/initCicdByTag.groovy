@@ -1,9 +1,11 @@
 import com.cicd.jenkins.MapMerge
+import com.cicd.jenkins.Git
 
 def call() {
   def cicd = [:]
   def buildNumber = currentBuild.getNumber()
   def mapMerge = new MapMerge()
+  def git = new Git()
 
   // TEST ONLY: Getting example config
   // def (exampleCustom, exampleCustomProps) = cicdConfig('jenkins', 'CicdConfig')
@@ -14,37 +16,23 @@ def call() {
   // Global config for the environment
   def (cicdCustom, cicdCustomProps) = customConfig('custom', 'CustomConfig')
 
-  // Map.metaClass.addNested = { Map rhs ->
-  //   def lhs = delegate
-  //   rhs.each { k, v -> lhs[k] = lhs[k] in Map ? lhs[k].addNested(v) : v }   
-  //   lhs
-  // }
-
   // Getting application specific config
   def cicdApp
   node ('master') {
     stage('Initialize CICD') {
       echo "master - Stage: Initialize CICD"
       checkout scm
-      cicdApp = readYaml file: 'config/AppConfig.yaml'
 
       // Merge config files
-      // cicd = cicdCustom.addNested( cicdApp )
+      cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapMerge.merge(cicdCustom, cicdApp)
 
-      // TODO: change the below setting. This 
-      if (cicdApp.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
+      // Get git info, incl "trigger by tag" info
+      cicd.git = Git.info('byTag')
+
+      if (cicd.job.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
     }
   }
 
-  println "cicdCustom : " + cicdCustom
-  println "cicdApp    : " + cicdApp
-  println "TAG_NAME   : " + TAG_NAME
-
-  println "cicd   : " + cicd
-
-
-
-
-  return cicdApp
+  return cicd
 }

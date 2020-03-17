@@ -29,7 +29,7 @@ def call() {
       // MIND: env.CICD_DEBUG.getClass() will LAWAYS by a String
       env.CICD_DEBUG = cicd.debug
       Logger.init(this, [ logLevel: LogLevel.INFO ])
-      Logger log = new Logger(this)
+      log = new Logger(this)
 
       // Get git info, incl "trigger by tag" info
       def gitInfo = new GitInfo(this)

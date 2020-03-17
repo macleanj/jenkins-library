@@ -47,7 +47,8 @@ class GitInfo {
         git.buildEnabled = 1
         git.tagTypeKey = git.tagName.substring(0)
         git.imageTypeKey = git.tagName.substring(1)
-        def (partTwo, partThree) = git.tagName =~ /[a-z]+-([^-])+[-]*([^-])*/
+        partTwo = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
+        partThree = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
 
         log.trace("------------------------------------------------------------------------------------------")
         log.trace("Triggered by tag")

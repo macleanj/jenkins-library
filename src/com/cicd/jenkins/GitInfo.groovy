@@ -22,6 +22,12 @@ class GitInfo {
     } else {
       git.triggerType = 'unknown'
     }
+
+    if (infoType == 'byTag') {
+      context.echo "Extending to get extensive information based on git-tag"
+      
+    }
+
     return git
   }
 

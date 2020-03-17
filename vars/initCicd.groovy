@@ -1,4 +1,3 @@
-@NonCPS
 def call() {
   def cicd = [:]
   def buildNumber = currentBuild.getNumber()

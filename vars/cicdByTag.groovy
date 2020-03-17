@@ -22,7 +22,7 @@ def call() {
       // Merge config files
       cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapMerge.merge(cicdGlobal, cicdApp)
-      env.CICD_DEBUG = cicd.job.debug // Pass it to 'this' (context) in all methods to be able to enable global debug
+      env.CICD_DEBUG = cicd.job.debug.toInteger() // Pass it to 'this' (context) in all methods to be able to enable global debug
       echo "DEBUG class cicd.job.debug: " + cicd.job.debug.getClass()
       echo "DEBUG class CICD_DEBUG: " + env.CICD_DEBUG.getClass()
       echo "DEBUG: " + env.CICD_DEBUG

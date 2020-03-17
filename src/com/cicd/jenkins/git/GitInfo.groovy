@@ -25,7 +25,7 @@ class GitInfo {
     // Logger.init(this, [ logLevel: LogLevel["TRACE"] ])
     // Logger.init(this, [ logLevel: LogLevel[this.loglevel] ])
     Logger.init(this.context, [ logLevel: LogLevel["TRACE"] ])
-    // this.log = new Logger(this)
+    this.log = new Logger(this)
   }
 
   // --- Method Logic

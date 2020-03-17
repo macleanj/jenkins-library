@@ -38,6 +38,7 @@ def call() {
       def gitInfo = new GitInfo(this)
       cicd.git = gitInfo.get('byTag')
 
+      log.error("CICD this\n" + prettyPrint(toJson(this)))
       log.error("CICD Configuration\n" + prettyPrint(toJson(cicd)))
       log.error("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
     }

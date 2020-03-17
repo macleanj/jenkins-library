@@ -13,18 +13,8 @@ class GitInfo {
   
   // --- Constructor
   GitInfo(context) {
-    this.name = "GitInfo"
     this.context = context
-    this.loglevel = context.env.CICD_LOGLEVEL
-    context.echo "loglevel = " + this.loglevel
-    context.echo "loglevel class = " + this.loglevel.getClass()
-    context.echo "loglevel lookup = " + LogLevel[this.loglevel]
-    context.echo "this.class.name = " + this.class.name
-    
-
-    // Logger.init(this, [ logLevel: LogLevel["TRACE"] ])
-    // Logger.init(this, [ logLevel: LogLevel[this.loglevel] ])
-    Logger.init(this.context, [ logLevel: LogLevel["TRACE"] ])
+    Logger.init(this.context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
     this.log = new Logger(this)
   }
 

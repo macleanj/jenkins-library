@@ -17,7 +17,7 @@ def call() {
   // App config from built repo
   def cicdApp
   node ('master') {
-    stage('Initialize CICD') {
+    stage('Initialize CICD (Library)') {
       echo "master - Stage: Initialize CICD"
       checkout scm
 
@@ -29,7 +29,7 @@ def call() {
       // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
       // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
       env.CICD_LOGLEVEL = cicd.loglevel
-      Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
+      Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL.toString()] ])
       log = new Logger(this)
 
       // Get git info, incl "trigger by tag" info

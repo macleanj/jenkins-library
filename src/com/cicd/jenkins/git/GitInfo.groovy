@@ -12,7 +12,7 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
-    Logger.init(this, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
+    Logger.init(this, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL.toString()] ])
     this.log = new Logger(this)
   }
 

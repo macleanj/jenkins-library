@@ -3,6 +3,13 @@ package com.cicd.jenkins.git
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 
+/*
+ *
+ * Tigger by tag examples, Character extraction by expected format:
+ * - Build Single : $buildTagType<imageTypeKey>-<version>. Example: bh-1.01
+ * - Build Multi  : $buildTagType<imageTypeKey>-<appName>-<version>. Example: bv-clojure-2.8.1
+ * - Deploy       : $deployTagType<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
+ */
 
 class GitInfo {
   // --- Resources
@@ -33,15 +40,19 @@ class GitInfo {
     }
 
     if (infoType == 'byTag') {
-      context.echo "context.echo: Extending to get extensive information based on git-tag"
       log.trace("Extending to get extensive information based on git-tag")
 
       if (git.triggerType == 'tag') { 
         // This is a tag
         git.buildEnabled = 1
+        git.tagTypeKey = git.tagName.substring(0)
+        git.imageTypeKey = git.tagName.substring(1)
+        def (partTwo, partThree) = git.tagName =~ /[a-z]+-([^-])+[-]*([^-])*/
 
         log.trace("------------------------------------------------------------------------------------------")
         log.trace("Triggered by tag")
+        log.trace("PartTwo: " + partTwo + ", partThree: " + partThree)
+        log.trace("PartTwo: " + partTwo + ", partThree: " + partThree)
       }
     }
 
@@ -50,10 +61,6 @@ class GitInfo {
     return git
   }
 
-//   # Character extraction by expected format
-//   # - Build Single : $buildTagType<imageTypeKey>-<version>. Example: bh-1.01
-//   # - Build Multi  : $buildTagType<imageTypeKey>-<appName>-<version>. Example: bv-clojure-2.8.1
-//   # - Deploy       : $deployTagType<imageTypeKey>-<deployEnvironment>-<version>. Example: dv-prod-1.01
 //   tagTypeKey="${tagName:0:1}"
 //   imageTypeKey="${tagName:1:1}"
 //   partTwo=$(echo $tagName | awk -F "-" '{print $2}')

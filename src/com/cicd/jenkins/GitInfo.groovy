@@ -8,8 +8,7 @@ class GitInfo {
   // --- Constructor
   GitInfo(context) {
     this.context = context
-    // this.debug = context.env.CICD_DEBUG.toInteger()
-    this.debug = context.env.CICD_DEBUG
+    this.debug = context.env.CICD_DEBUG.toInteger()
   }
 
   // --- Method Logic

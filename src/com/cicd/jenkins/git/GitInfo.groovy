@@ -28,7 +28,7 @@ class GitInfo {
   }
 
   // --- Method Logic
-  def get(def String infoType) {
+  def get(def Map cicd [:], def String infoType) {
     def git = [:]
     git.tagName = context.env.TAG_NAME ?: ''
     git.gitHash = context.env.GIT_COMMIT ?: ''
@@ -153,9 +153,8 @@ class GitInfo {
 
     }
 
-
-
-    return git
+    cicd.git = git
+    return cicd
   }
 }
 //   tagTypeKey="${tagName:0:1}"

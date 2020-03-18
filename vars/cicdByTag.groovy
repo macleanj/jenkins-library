@@ -32,9 +32,9 @@ def call() {
       Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
       log = new Logger(this)
 
-      // Get git info, incl "trigger by tag" info
+      // Enhance cicd config (object) with git info, incl "trigger by tag" info
       def gitInfo = new GitInfo(this)
-      cicd.git = gitInfo.get('byTag')
+      cicd = gitInfo.get(cicd, 'byTag')
 
       log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
       log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))

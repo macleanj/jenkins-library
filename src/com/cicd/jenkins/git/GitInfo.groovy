@@ -44,11 +44,11 @@ class GitInfo {
       log.trace("Extending to get extensive information based on git-tag")
 
       if (git.triggerType == 'tag') { 
-        log.info("Triggered by tag: tag offered")
+        log.info("Tag:" + git.tagName)
         git.tagTypeKey = git.tagName.substring(0)
         git.imageTypeKey = git.tagName.substring(1)
-        def partTwo = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
-        def partThree = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
+        def partTwo = (git.tagName =~/[a-z]+-([^-])+[-]*[^-]*/)
+        def partThree = (git.tagName =~/[a-z]+-[^-]+[-]*([^-]*)/)
 
   // public static final String buildTag = "b"
   // public static final String deployTag = "d"
@@ -57,16 +57,24 @@ class GitInfo {
 
         if (git.tagTypeKey == TriggerByTagConstants.buildTag) {
           git.tagType="build"
+          log.info("Tag:" + git.tagType)
           if (partThree) {
+            log.info("Tag: Build Multi")
             git.appName = partTwo.text.toLowerCase().replaceAll("[_]", "-")
             git.versionKey = partThree
-          } else {
+          } else if (partTwo) {
+            // TODO: add enableBuild after perfectly matching pattern
+            log.info("Tag: Build Single")
             git.versionKey = partTwo
+          } else {
+            error.info("Tag: Build tag not valid")
+            git.buildEnabled = 0
           }
         } else if (git.tagTypeKey == TriggerByTagConstants.deployTag) {
           git.tagType="deployment"
-          git.envKey = (git.tagName =~ /[a-z]+-([^-])+[-]*[^-]*/)
-          git.versionKey = (git.tagName =~ /[a-z]+-[^-]+[-]*([^-]*)/)
+          log.info("Tag:" + git.tagType)
+          // git.envKey = (git.tagName =~/[a-z]+-([^-])+[-]*[^-]*/)
+          // git.versionKey = (git.tagName =~/[a-z]+-[^-]+[-]*([^-]*)/)
         }
 
         log.trace("------------------------------------------------------------------------------------------")

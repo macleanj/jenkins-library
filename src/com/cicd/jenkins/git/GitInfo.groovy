@@ -3,6 +3,7 @@ package com.cicd.jenkins.git
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.TriggerByTagConstants
+import static groovy.json.JsonOutput.*
 
 /*
  *
@@ -45,10 +46,12 @@ class GitInfo {
 
       if (git.triggerType == 'tag') { 
         log.info("Tag:" + git.tagName)
-        def supportedTagNamePattern="([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9.]+)[-]*([0-9.]*)"
-        // def tagNameArray = git.tagName =~/([a-z])([a-z])-([^-]+)[-]*([^-]*)/
-        def tagNameArray = (git.tagName =~ /${supportedTagNamePattern}/)[0]
+        
+        // Matching Only supported patterns will match
+        def tagNamePattern="([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9.]+)[-]*([0-9.]*)"
+        def tagNameArray = (git.tagName =~ /${tagNamePattern}/)[0]
         println prettyPrint(toJson(tagNameArray))
+        
         git.tagTypeKey = tagNameArray[1]
         git.imageTypeKey = tagNameArray[2]
         def partTwo = tagNameArray[3]

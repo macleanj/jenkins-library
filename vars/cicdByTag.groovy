@@ -35,11 +35,12 @@ def call() {
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
         def gitInfo = new GitInfo(this)
         cicd = gitInfo.get(cicd, 'byTag')
+        
+        log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
+        log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
   }
 
-  log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
-  log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
 
   return [cicd, log]
 }

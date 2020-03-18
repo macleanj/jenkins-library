@@ -18,7 +18,6 @@ class GitInfo {
   def name
   def context
   def log
-  def loglevel
   
   // --- Constructor
   GitInfo(context) {
@@ -30,10 +29,11 @@ class GitInfo {
   // --- Method Logic
   def get(def Map cicd, def String infoType) {
     def git = [:]
-    git.tagName = context.env.TAG_NAME ?: ''
-    git.gitHash = context.env.GIT_COMMIT ?: ''
-    git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
+    git.branchName = context.env.BRANCH_NAME ?: ''
     git.changeId = context.env.CHANGE_ID ?: ''
+    git.tagName = context.env.TAG_NAME ?: ''
+    git.gitHash = sh (script: 'git rev-parse HEAD', returnStdout: true).trim()
+    git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
     
     if (git.changeId) {
       git.triggerType = "pullRequest"
@@ -71,6 +71,8 @@ class GitInfo {
               println "Tag: Build Multi"
               if (partTwo ==~ /[a-z_]+/) {
                 cicd.job.enabled = 1
+                cicd.job.buildEnabled = 1
+                cicd.job.deployEnabled = 0
                 git.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
 
                 // Set version
@@ -87,6 +89,8 @@ class GitInfo {
               // log.info("Tag: Build Single")
               println "Tag: Build Single"
               cicd.job.enabled = 1
+              cicd.job.buildEnabled = 1
+              cicd.job.deployEnabled = 0
 
               // Set version
               git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partTwo : git.gitHashShort
@@ -107,6 +111,8 @@ class GitInfo {
               git.envKey = partTwo
               if (cicd.deploy.containsKey(git.envKey)) {
                 cicd.job.enabled = 1
+                cicd.job.buildEnabled = 1
+                cicd.job.deployEnabled = 1
 
                 // Set version
                 git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partThree : git.gitHashShort

@@ -17,9 +17,9 @@ def call() {
   // App config from built repo
   def cicdApp
   node ('master') {
-    stage('Initialize CICD (Library)') {
-      echo "master - Stage: Initialize CICD"
-      withCheckout(scm) {
+    withCheckout(scm) {
+      stage('Initialize CICD (Library)') {
+        echo "master - Stage: Initialize CICD"
         // checkout scm
 
         // Merge config files
@@ -37,11 +37,11 @@ def call() {
         def gitInfo = new GitInfo(this)
         cicd = gitInfo.get(cicd, 'byTag')
       }
-
-      log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
-      log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
     }
   }
+
+  log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
+  log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
 
   return [cicd, log]
 }

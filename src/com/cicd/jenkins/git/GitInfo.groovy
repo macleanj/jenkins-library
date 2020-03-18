@@ -31,66 +31,126 @@ class GitInfo {
   def get(def String infoType) {
     def git = [:]
     git.tagName = context.env.TAG_NAME ?: ''
+    git.gitHash = context.env.GIT_COMMIT ?: ''
+    git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
     git.changeId = context.env.CHANGE_ID ?: ''
     
     if (git.changeId) {
-      git.triggerType = 'pullRequest'
+      git.triggerType = "pullRequest"
     } else if (git.tagName) {
-      git.triggerType = 'tag'
+      git.triggerType = "tag"
     } else {
-      git.triggerType = 'unknown'
+      git.triggerType = "unknown"
     }
 
     if (infoType == 'byTag') {
       log.trace("Extending to get extensive information based on git-tag")
 
+      // START VALIDATION
       if (git.triggerType == 'tag') { 
-        log.info("Tag:" + git.tagName)
-        
-        // Matching Only supported patterns will match
-        def tagNamePattern="([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9.]+)[-]*([0-9.]*)"
-        def tagNameArray = (git.tagName =~ /${tagNamePattern}/)[0]
-        println prettyPrint(toJson(tagNameArray))
-        
-        git.tagTypeKey = tagNameArray[1]
-        git.imageTypeKey = tagNameArray[2]
-        def partTwo = tagNameArray[3]
-        def partThree = tagNameArray[4]
-        log.trace("tagTypeKey: " + git.tagTypeKey)
-        log.trace("imageTypeKey: " + git.imageTypeKey)
-        log.trace("partTwo: " + partTwo)
-        log.trace("partThree: " + partThree)
+        cicd.job.enabled = 0
+        // Only supported patterns will match
+        def TagNamePattern="^([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9._]+)[-]*([0-9.]*)\$"
+        def tagNameArray = (git.tagName =~ /${TagNamePattern}/)
 
-  // public static final String buildTag = "b"
-  // public static final String deployTag = "d"
-  // public static final String versionTag = "v"
-  // public static final String hashTag = "h"
+        if (tagNameArray) {
+          // Overall allowed tagPattern is matched
+          println prettyPrint(toJson(tagNameArray[0]))
+          def tagTypeKey = tagNameArray[0][1]
+          def versionKey = tagNameArray[0][2]
+          def partTwo = tagNameArray[0][3]
+          def partThree = tagNameArray[0][4]
 
-        if (git.tagTypeKey == TriggerByTagConstants.buildTag) {
-          git.tagType="build"
-          log.info("Tag:" + git.tagType)
-          if (partThree) {
-            log.info("Tag: Build Multi")
-            git.appName = partTwo.text.toLowerCase().replaceAll("[_]", "-")
-            git.versionKey = partThree
-          } else if (partTwo) {
-            // TODO: add enableBuild after perfectly matching pattern
-            log.info("Tag: Build Single")
-            git.versionKey = partTwo
-          } else {
-            error.info("Tag: Build tag not valid")
-            git.buildEnabled = 0
+          // Build instantiation
+          if (tagTypeKey == TriggerByTagConstants.buildTag) {
+            git.tagType="build"
+            // log.info("Tag:" + git.tagType)
+            println "Tag: " + git.tagType
+            if (partThree ==~ /[0-9.]+/) {
+              // log.info("Tag: Build Multi")
+              println "Tag: Build Multi"
+              if (partTwo ==~ /[a-z_]+/) {
+                cicd.job.enabled = 1
+                git.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
+
+                // Set version
+                git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partThree : git.gitHashShort
+
+                // Used environment mapping
+                cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
+              } else {
+                // log.error("Tag: " + git.tagType + " tag not valid - bad appName pattern")
+                println "Tag: " + git.tagType + " tag not valid - bad appName pattern"
+              }
+            } else if (partTwo ==~ /[0-9.]+/) {
+              // TODO: add enableBuild after perfectly matching pattern
+              // log.info("Tag: Build Single")
+              println "Tag: Build Single"
+              cicd.job.enabled = 1
+
+              // Set version
+              git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partTwo : git.gitHashShort
+
+              // Used environment mapping
+              cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
+            } else {
+              // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+              println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
+            }
+
+          // Deployment instantiation
+          } else if (tagTypeKey == TriggerByTagConstants.deployTag) {
+            git.tagType="deployment"
+            // log.info("Tag:" + git.tagType)
+            println "Tag:" + git.tagType
+            if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
+              git.envKey = partTwo
+              if (cicd.deploy.containsKey(git.envKey)) {
+                cicd.job.enabled = 1
+
+                // Set version
+                git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partThree : git.gitHashShort
+
+                // Used environment mapping
+                cicd.job.environment = cicd.deploy[git.envKey]
+              } else {
+                // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+                println "Tag: " + git.tagType + " tag not valid - not supported environment"
+              }
+            } else {
+              // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+              println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
+            }
+          
+          // No "else" needed here as errors are caught in the initial pattern check
+
           }
-        } else if (git.tagTypeKey == TriggerByTagConstants.deployTag) {
-          git.tagType="deployment"
-          log.info("Tag:" + git.tagType)
-          // git.envKey = (git.tagName =~/[a-z]+-([^-])+[-]*[^-]*/)
-          // git.versionKey = (git.tagName =~/[a-z]+-[^-]+[-]*([^-]*)/)
-        }
 
-        log.trace("------------------------------------------------------------------------------------------")
-        log.trace("Triggered by tag")
+        } else {
+            git.tagType="overall"
+            // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+            println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
+        }
+      // Tag
+      
+      } else if (git.triggerType == "pullRequest") { 
+        cicd.job.enabled = 1
+        cicd.job.buildEnabled = cicd.pr.buildEnabled
+        cicd.job.deployEnabled = cicd.pr.deployEnabled
+        // log.info("pullRequest")
+        println "pullRequest"
+
+        // Set version
+        git.versionId = git.gitHashShort
+
+        // Used environment mapping
+        cicd.job.environment = cicd.deploy[cicd.pr.buildEnvironment]
+      } else { 
+        // log.error("Unknown trigger")
+        println "Unknown trigger"
       }
+      // END VALIDATION
+
     }
 
 

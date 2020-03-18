@@ -26,14 +26,25 @@ class GitInfo {
     this.log = new Logger(this)
   }
 
+  /**
+  * Parse HEAD of current directory and return commit hash
+  */
+  def private getGitCommit() {
+      git_commit = sh (
+          script: 'git rev-parse HEAD',
+          returnStdout: true
+      ).trim()
+      return git_commit
+  }
+
   // --- Method Logic
   def get(def Map cicd, def String infoType) {
     def git = [:]
     git.branchName = context.env.BRANCH_NAME ?: ''
     git.changeId = context.env.CHANGE_ID ?: ''
     git.tagName = context.env.TAG_NAME ?: ''
-    git.gitHash = context.env.GIT_COMMIT ?: ''
-    // git.gitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    // git.gitHash = context.env.GIT_COMMIT ?: ''
+    git.gitHash = this.getGitCommit()
     git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
     
     if (git.changeId) {

@@ -19,22 +19,24 @@ def call() {
   node ('master') {
     stage('Initialize CICD (Library)') {
       echo "master - Stage: Initialize CICD"
-      checkout scm
+      withCheckout(scm) {
+        // checkout scm
 
-      // Merge config files
-      cicdApp = readYaml file: 'config/AppConfig.yaml'
-      cicd = mapMerge.merge(cicdGlobal, cicdApp)
+        // Merge config files
+        cicdApp = readYaml file: 'config/AppConfig.yaml'
+        cicd = mapMerge.merge(cicdGlobal, cicdApp)
 
-      // Initialize logger
-      // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
-      // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
-      env.CICD_LOGLEVEL = cicd.loglevel
-      Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
-      log = new Logger(this)
+        // Initialize logger
+        // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
+        // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
+        env.CICD_LOGLEVEL = cicd.loglevel
+        Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
+        log = new Logger(this)
 
-      // Enhance cicd config (object) with git info, incl "trigger by tag" info
-      def gitInfo = new GitInfo(this)
-      cicd = gitInfo.get(cicd, 'byTag')
+        // Enhance cicd config (object) with git info, incl "trigger by tag" info
+        def gitInfo = new GitInfo(this)
+        cicd = gitInfo.get(cicd, 'byTag')
+      }
 
       log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
       log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))

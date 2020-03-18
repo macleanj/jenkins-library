@@ -47,8 +47,8 @@ class GitInfo {
         log.info("Tag:" + git.tagName)
         git.tagTypeKey = git.tagName.substring(0)
         git.imageTypeKey = git.tagName.substring(1)
-        def partTwo = git.tagName =~/[a-z]+-([^-])+[-]*[^-]*/
-        def partThree = git.tagName =~/[a-z]+-[^-]+[-]*([^-]*)/
+        def partTwo = git.tagName =~/[a-z]+\-([^\-])+[\-]*[^\-]*/
+        def partThree = git.tagName =~/[a-z]+\-[^\-]+[\-]*([^\-]*)/
         log.trace("PartTwo: " + partTwo + ", " + partTwo[0] + ", " + partTwo[0][0] + ", " + partTwo[0][1])
         log.trace("PartTwo: " + partThree + ", " + partThree[0] + ", " + partThree[0][0] + ", " + partThree[0][1])
 

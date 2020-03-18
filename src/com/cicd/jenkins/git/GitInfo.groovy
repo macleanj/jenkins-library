@@ -45,12 +45,18 @@ class GitInfo {
 
       if (git.triggerType == 'tag') { 
         log.info("Tag:" + git.tagName)
-        git.tagTypeKey = git.tagName.substring(0)
-        git.imageTypeKey = git.tagName.substring(1)
-        def partTwo = git.tagName =~/[a-z]+\-([^\-])+[\-]*[^\-]*/
-        def partThree = git.tagName =~/[a-z]+\-[^\-]+[\-]*([^\-]*)/
-        log.trace("PartTwo: " + partTwo + ", " + partTwo[0] + ", " + partTwo[0][0] + ", " + partTwo[0][1])
-        log.trace("PartTwo: " + partThree + ", " + partThree[0] + ", " + partThree[0][0] + ", " + partThree[0][1])
+        def supportedTagNamePattern="([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9.]+)[-]*([0-9.]*)"
+        // def tagNameArray = git.tagName =~/([a-z])([a-z])-([^-]+)[-]*([^-]*)/
+        def tagNameArray = (git.tagName =~ /${supportedTagNamePattern}/)[0]
+        println prettyPrint(toJson(tagNameArray))
+        git.tagTypeKey = tagNameArray[1]
+        git.imageTypeKey = tagNameArray[2]
+        def partTwo = tagNameArray[3]
+        def partThree = tagNameArray[4]
+        log.trace("tagTypeKey: " + git.tagTypeKey)
+        log.trace("imageTypeKey: " + git.imageTypeKey)
+        log.trace("partTwo: " + partTwo)
+        log.trace("partThree: " + partThree)
 
   // public static final String buildTag = "b"
   // public static final String deployTag = "d"

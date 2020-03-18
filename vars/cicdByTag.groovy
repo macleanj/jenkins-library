@@ -19,8 +19,12 @@ def call() {
   node ('master') {
       stage('Initialize CICD (Library)') {
         echo "master - Stage: Initialize CICD"
-        checkout scm
-        echo scm
+        // Checkout the repository and save the resulting metadata
+        def scmVars = checkout([
+          $class: 'GitSCM'
+        ])
+        log.debug("scmVars: " + scmVars)
+        // checkout scm
 
         // Merge config files
         cicdApp = readYaml file: 'config/AppConfig.yaml'

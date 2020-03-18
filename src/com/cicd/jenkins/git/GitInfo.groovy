@@ -49,8 +49,8 @@ class GitInfo {
         git.imageTypeKey = git.tagName.substring(1)
         def partTwo = git.tagName =~/[a-z]+-([^-])+[-]*[^-]*/
         def partThree = git.tagName =~/[a-z]+-[^-]+[-]*([^-]*)/
-        log.trace("PartTwo: " + partTwo + ", " + partTwo[0] + ", " + partTwo[0][0])
-        log.trace("PartTwo: " + partThree + ", " + partThree[0] + ", " + partThree[0][0])
+        log.trace("PartTwo: " + partTwo + ", " + partTwo[0] + ", " + partTwo[0][0] + ", " + partTwo[0][1])
+        log.trace("PartTwo: " + partThree + ", " + partThree[0] + ", " + partThree[0][0] + ", " + partThree[0][1])
 
   // public static final String buildTag = "b"
   // public static final String deployTag = "d"

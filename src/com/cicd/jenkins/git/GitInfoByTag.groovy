@@ -5,6 +5,7 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.GitUtils
 import com.cicd.jenkins.git.GithubRepoInfo
 import com.cicd.jenkins.git.GitTags
+import com.cicd.jenkins.utils.maps.MapMerge
 import static groovy.json.JsonOutput.*
 
 /*
@@ -45,8 +46,9 @@ class GitInfoByTag {
       triggerType = "pullRequest"
     } else if (tagName) {
       triggerType = "tag"
-      gitCommit = gitUtils.getGithubByTag(tagName, scm)
-      git = gitUtils.getGithubRepoInfo(gitCommit, scm)
+      gitTag = gitUtils.getGithubByTag(tagName, scm)
+      gitRepo = gitUtils.getGithubRepoInfo(gitTag.gitCommit, scm)
+      git = mapMerge.merge(gitTag, gitRepo)
     } else {
       triggerType = "unknown"
     }

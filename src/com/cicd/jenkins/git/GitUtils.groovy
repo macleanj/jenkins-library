@@ -49,7 +49,7 @@ public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
   commitInfo.authorUrl = commitInfoJson.author.html_url
   commitInfo.authorAvatar = commitInfoJson.author.avatar_url
   // commitInfo.isPreRelease = Boolean.valueOf(commitInfoJson.prerelease)
-  commitInfo.tagName = tagName
+  // commitInfo.tagName = tagName
   return commitInfo
 }
 

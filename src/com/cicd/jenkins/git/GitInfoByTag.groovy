@@ -21,6 +21,7 @@ class GitInfoByTag {
   def context
   def log
   def gitUtils
+  def mapMerge
   
   // --- Constructor
   GitInfoByTag(context) {

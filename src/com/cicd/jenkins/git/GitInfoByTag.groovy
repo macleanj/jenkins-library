@@ -5,7 +5,6 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.GitUtils
 import com.cicd.jenkins.git.GithubRepoInfo
 import com.cicd.jenkins.git.GitTags
-import com.cicd.jenkins.utils.maps.MapMerge
 import static groovy.json.JsonOutput.*
 
 /*
@@ -31,7 +30,6 @@ class GitInfoByTag {
     Logger.init(this.context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
     this.log = new Logger(this)
     this.gitUtils = new GitUtils()
-    this.mapMerge = new MapMerge()
   }
 
   // --- Method Logic
@@ -47,7 +45,7 @@ class GitInfoByTag {
       triggerType = "tag"
       def gitTag = gitUtils.getGithubByTag(tagName, scm)
       def gitRepo = gitUtils.getGithubRepoInfo(gitTag.gitCommit, scm)
-      git = mapMerge.merge(gitTag, gitRepo)
+      git = gitTag + gitRepo
     } else {
       triggerType = "unknown"
     }
@@ -72,12 +70,10 @@ class GitInfoByTag {
         // Build instantiation
         if (tagTypeKey == GitTags.buildTag) {
           git.tagType="build"
-          // log.info("Tag:" + git.tagType)
-          println "Tag: " + git.tagType
-          if (partThree ==~ /[0-9.]+/) {
-            // log.info("Tag: Build Multi")
-            println "Tag: Build Multi"
-            if (partTwo ==~ /[a-z_]+/) {
+          log.info("Tag:" + git.tagType)
+                    if (partThree ==~ /[0-9.]+/) {
+            log.info("Tag: Build Multi")
+                        if (partTwo ==~ /[a-z_]+/) {
               cicd.job.enabled = 1
               cicd.job.buildEnabled = 1
               cicd.job.deployEnabled = 0
@@ -89,14 +85,12 @@ class GitInfoByTag {
               // Used environment mapping
               cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
             } else {
-              // log.error("Tag: " + git.tagType + " tag not valid - bad appName pattern")
-              println "Tag: " + git.tagType + " tag not valid - bad appName pattern"
-            }
+              log.error("Tag: " + git.tagType + " tag not valid - bad appName pattern")
+                          }
           } else if (partTwo ==~ /[0-9.]+/) {
             // TODO: add enableBuild after perfectly matching pattern
-            // log.info("Tag: Build Single")
-            println "Tag: Build Single"
-            cicd.job.enabled = 1
+            log.info("Tag: Build Single")
+                        cicd.job.enabled = 1
             cicd.job.buildEnabled = 1
             cicd.job.deployEnabled = 0
 
@@ -106,16 +100,14 @@ class GitInfoByTag {
             // Used environment mapping
             cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
           } else {
-            // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
-            println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
-          }
+            log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+                      }
 
         // Deployment instantiation
         } else if (tagTypeKey == GitTags.deployTag) {
           git.tagType="deployment"
-          // log.info("Tag:" + git.tagType)
-          println "Tag:" + git.tagType
-          if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
+          log.info("Tag:" + git.tagType)
+                    if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
             git.envKey = partTwo
             if (cicd.deploy.containsKey(git.envKey)) {
               cicd.job.enabled = 1
@@ -128,13 +120,11 @@ class GitInfoByTag {
               // Used environment mapping
               cicd.job.environment = cicd.deploy[git.envKey]
             } else {
-              // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
-              println "Tag: " + git.tagType + " tag not valid - not supported environment"
-            }
+              log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+                          }
           } else {
-            // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
-            println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
-          }
+            log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+                      }
         
         // No "else" needed here as errors are caught in the initial pattern check
 
@@ -142,27 +132,24 @@ class GitInfoByTag {
 
       } else {
           git.tagType="overall"
-          // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
-          println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
-      }
+          log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+                }
     // Tag
     
     } else if (git.triggerType == "pullRequest") { 
       cicd.job.enabled = 1
       cicd.job.buildEnabled = cicd.pr.buildEnabled
       cicd.job.deployEnabled = cicd.pr.deployEnabled
-      // log.info("pullRequest")
-      println "pullRequest"
-
+      log.info("pullRequest")
+      
       // Set version
       git.versionId = git.gitHashShort
 
       // Used environment mapping
       cicd.job.environment = cicd.deploy[cicd.pr.buildEnvironment]
     } else { 
-      // log.error("Unknown trigger")
-      println "Unknown trigger"
-    }
+      log.error("Unknown trigger")
+          }
     // END VALIDATION
 
     cicd.git = git

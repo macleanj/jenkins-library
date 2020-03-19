@@ -3,7 +3,7 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
 import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.GithubCommitInfo
+import com.cicd.jenkins.git.GithubRepoInfo
 
 import static groovy.json.JsonOutput.*
 
@@ -11,6 +11,9 @@ def call() {
   def cicd = [:]
   def log
   def mapMerge = new MapMerge()
+
+  def gitCommitTest = sh(script: "git rev-parse HEAD", returnStdout: true)
+  echo "GIT_COMMIT Test:  ${gitCommitTest}"
 
   // Getting custom library config
   // Global config for the environment

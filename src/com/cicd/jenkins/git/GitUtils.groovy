@@ -27,6 +27,14 @@ public String getCurrentAccountName(Object scm) {
   return matcher[0][1]
 }
 
+
+public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
+  String currentRepoName = getCurrentRepoName(scm)
+  String currentAccountName = getCurrentAccountName(scm)
+  GithubCommitInfo gitCommitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+  return gitCommitInfo
+}
+
 public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
   /*  fetch the commit info*/
   def commitResponse
@@ -51,13 +59,6 @@ public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
   // commitInfo.isPreRelease = Boolean.valueOf(commitInfoJson.prerelease)
   // commitInfo.tagName = tagName
   return commitInfo
-}
-
-public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
-  String currentRepoName = getCurrentRepoName(scm)
-  String currentAccountName = getCurrentAccountName(scm)
-  GithubCommitInfo gitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-  return gitInfo
 }
 
 public GithubReleaseInfo getGithubReleaseInfo(String repoName, String tagName) {

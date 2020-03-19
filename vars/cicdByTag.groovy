@@ -1,9 +1,9 @@
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
-import com.cicd.jenkins.git.GitInfo
-import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.GithubCommitInfo
+// import com.cicd.jenkins.git.GitInfo
+import com.cicd.jenkins.git.*
+// import com.cicd.jenkins.git.GithubCommitInfo
 
 import static groovy.json.JsonOutput.*
 
@@ -40,8 +40,8 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfoTemp = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
-        echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
+        GithubCommitInfo gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
+        echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
         
 
 
@@ -53,7 +53,6 @@ def call() {
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
   }
-
 
   return [cicd, log]
 }

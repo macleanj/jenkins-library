@@ -1,6 +1,6 @@
 package com.cicd.jenkins.git
 
-class GitTagsDef {
+class GitTags {
 
   public static final String buildTag = "b"
   public static final String deployTag = "d"

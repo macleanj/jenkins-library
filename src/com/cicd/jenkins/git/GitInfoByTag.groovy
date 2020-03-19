@@ -26,12 +26,11 @@ class GitInfoByTag {
   GitInfoByTag(context) {
     this.context = context
 
-    // Instantiate log
+    // Instantiate methods
     Logger.init(this.context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
     this.log = new Logger(this)
-
-    // Instantiate gitUtils
     this.gitUtils = new GitUtils()
+    this.mapMerge = new MapMerge()
   }
 
   // --- Method Logic

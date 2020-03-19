@@ -36,6 +36,7 @@ class GitInfoByTag {
   def info(def Map cicd, def Object scm) {
     def triggerType
     def git = [:]
+    def tag = [:]
     def changeId = context.env.CHANGE_ID ?: ''
     def tagName = context.env.TAG_NAME ?: ''
     
@@ -69,23 +70,23 @@ class GitInfoByTag {
 
         // Build instantiation
         if (tagTypeKey == GitTags.buildTag) {
-          git.tagType="build"
-          log.info("Tag:" + git.tagType)
+          tag.tagType="build"
+          log.info("Tag:" + tag.tagType)
                     if (partThree ==~ /[0-9.]+/) {
             log.info("Tag: Build Multi")
                         if (partTwo ==~ /[a-z_]+/) {
               cicd.job.enabled = 1
               cicd.job.buildEnabled = 1
               cicd.job.deployEnabled = 0
-              git.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
+              tag.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
 
               // Set version
-              git.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
+              tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
               cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
             } else {
-              log.error("Tag: " + git.tagType + " tag not valid - bad appName pattern")
+              log.error("Tag: " + tag.tagType + " tag not valid - bad appName pattern")
                           }
           } else if (partTwo ==~ /[0-9.]+/) {
             // TODO: add enableBuild after perfectly matching pattern
@@ -95,18 +96,18 @@ class GitInfoByTag {
             cicd.job.deployEnabled = 0
 
             // Set version
-            git.versionId = (versionKey == GitTags.versionTag) ? partTwo : git.gitHashShort
+            tag.versionId = (versionKey == GitTags.versionTag) ? partTwo : git.gitHashShort
 
             // Used environment mapping
             cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
           } else {
-            log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+            log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                       }
 
         // Deployment instantiation
         } else if (tagTypeKey == GitTags.deployTag) {
-          git.tagType="deployment"
-          log.info("Tag:" + git.tagType)
+          tag.tagType="deployment"
+          log.info("Tag:" + tag.tagType)
                     if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
             git.envKey = partTwo
             if (cicd.deploy.containsKey(git.envKey)) {
@@ -115,15 +116,15 @@ class GitInfoByTag {
               cicd.job.deployEnabled = 1
 
               // Set version
-              git.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
+              tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
               cicd.job.environment = cicd.deploy[git.envKey]
             } else {
-              log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+              log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                           }
           } else {
-            log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+            log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                       }
         
         // No "else" needed here as errors are caught in the initial pattern check
@@ -131,8 +132,8 @@ class GitInfoByTag {
         }
 
       } else {
-          git.tagType="overall"
-          log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+          tag.tagType="overall"
+          log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                 }
     // Tag
     
@@ -143,7 +144,7 @@ class GitInfoByTag {
       log.info("pullRequest")
       
       // Set version
-      git.versionId = git.gitHashShort
+      tag.versionId = git.gitHashShort
 
       // Used environment mapping
       cicd.job.environment = cicd.deploy[cicd.pr.buildEnvironment]
@@ -153,6 +154,7 @@ class GitInfoByTag {
     // END VALIDATION
 
     cicd.git = git
+    cicd.tag = tag
     return cicd
   }
 }

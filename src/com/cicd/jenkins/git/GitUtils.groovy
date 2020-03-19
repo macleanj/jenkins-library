@@ -57,7 +57,7 @@ public getGithubByTag(String tagName, Object scm) {
   }
 
   def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
-  tagInfo = [:]
+  def tagInfo = [:]
   tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
@@ -111,7 +111,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   def repoInfoJson = new JsonSlurper().parseText(getResponseRepo.content)
   def commitInfoJson = new JsonSlurper().parseText(getResponseCommit.content)
 
-  repoInfo = [:]
+  def repoInfo = [:]
   repoInfo.repoName = repoInfoJson.name
   repoInfo.repoFullName = repoInfoJson.full_name
   repoInfo.repoDescription = repoInfoJson.description

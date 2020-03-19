@@ -80,9 +80,7 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   def commitInfoJson = new JsonSlurper().parseText(getResponseCommit.content)
 
   GithubRepoInfo repoInfo = new GithubRepoInfo()
-  repoInfo.repoUser = userInfoJson.name
-  repoInfo.repoName = userInfoJson.name
-  repoInfo.repoTitle = repoInfoJson.name
+  repoInfo.repoName = repoInfoJson.name
   repoInfo.repoFullName = repoInfoJson.full_name
   repoInfo.repoDescription = repoInfoJson.description
   repoInfo.repoIsPrivate = repoInfoJson["private"]

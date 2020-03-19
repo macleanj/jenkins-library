@@ -53,6 +53,13 @@ public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
   return commitInfo
 }
 
+public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
+  String currentRepoName = getCurrentRepoName(scm)
+  String currentAccountName = getCurrentAccountName(scm)
+  GithubCommitInfo gitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+  return gitInfo
+}
+
 public GithubReleaseInfo getGithubReleaseInfo(String repoName, String tagName) {
   /*  fetch the release info*/
   def releaseResponse

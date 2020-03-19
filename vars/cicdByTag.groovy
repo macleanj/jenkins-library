@@ -40,7 +40,7 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfoTemp = gitUtils.getCommitInfoForCurrentTag(gitCommit)
+        GithubCommitInfo gitInfoTemp = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
         echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
         
 
@@ -56,14 +56,4 @@ def call() {
 
 
   return [cicd, log]
-}
-
-
-public GithubCommitInfo getCommitInfoForCurrentTag(String gitCommit) {
-  GitUtils gitUtils = new GitUtils()
-  String currentRepoName = gitUtils.getCurrentRepoName(scm)
-  String currentAccountName = gitUtils.getCurrentAccountName(scm)
-
-  GithubCommitInfo gitInfoTemp = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-  return gitInfoTemp
 }

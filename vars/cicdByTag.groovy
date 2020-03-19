@@ -1,7 +1,8 @@
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
-import com.cicd.jenkins.git.GitInfo
+import com.cicd.jenkins.git.GitInfoByTag
+
 import com.cicd.jenkins.git.GitUtils
 import com.cicd.jenkins.git.GithubRepoInfo
 
@@ -45,12 +46,12 @@ def call() {
         // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
         // GitUtils gitUtils = new GitUtils()
-        GithubRepoInfo gitCommitInfo = gitUtils.getGithubRepoInfo(gitCommit, scm)
-        echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
+        gitCommitInfo = gitUtils.getGithubRepoInfo(gitCommit, scm)
+        echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo).sort())
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
-        def gitInfo = new GitInfo(this)
-        cicd = gitInfo.get(cicd, 'byTag')
+        def gitInfoByTag = new GitInfoByTag(this)
+        cicd = gitInfoByTag.info(cicd, scm)
 
         log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))

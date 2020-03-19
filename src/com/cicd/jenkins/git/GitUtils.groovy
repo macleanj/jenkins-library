@@ -27,17 +27,32 @@ public String getCurrentAccountName(Object scm) {
   return matcher[0][1]
 }
 
-// public GithubRepoInfo getRepoInfo(Object scm) {
-//   String currentRepoName = getCurrentRepoName(scm)
-//   String currentAccountName = getCurrentAccountName(scm)
-//   GithubCommitInfo gitCommitInfo = getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-//   return gitCommitInfo
-// }
+public GithubCommitByTag getGithubCommitByTag(String tagName, Object scm) {
+  /*  fetch the commit info*/
+  String accountName = getCurrentAccountName(scm)
+  String repoName = getCurrentRepoName(scm)
+  def getResponseTag
+  GString requestedUrl
+
+  requestedUrl = "https://api.github.com/users/${accountName}/${repoName}/git/refs/tags/${tagName}"
+  try {
+    getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
+                                  authentication: 'github.cicd.main.api.credentials',
+                                  url: requestedUrl)
+  } catch (IllegalStateException e) {
+    echo"Tag in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
+    return null
+  }
+
+  def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
+  return tagInfoJson.object.sha
+}
 
 public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
+  def getResponseUser
   def getResponseRepo
   def getResponseCommit
   GString requestedUrl
@@ -98,68 +113,6 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
 
   return repoInfo
 }
-
-// public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
-//   String currentRepoName = getCurrentRepoName(scm)
-//   String currentAccountName = getCurrentAccountName(scm)
-//   GithubCommitInfo gitCommitInfo = getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-//   return gitCommitInfo
-// }
-
-// public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
-//   /*  fetch the commit info*/
-//   def commitResponse
-//   GString requestedUrl = "https://api.github.com/repos/${repoName}/commits/${gitCommit}"
-//   try {
-//     commitResponse = httpRequest(acceptType: 'APPLICATION_JSON',
-//                                   authentication: 'github.cicd.main.api.credentials',
-//                                   url: requestedUrl)
-//   } catch (IllegalStateException e) {
-//     echo"Commit in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
-//     return null
-//   }
-
-//   def commitInfoJson = new JsonSlurper().parseText(commitResponse.content)
-//   GithubCommitInfo commitInfo = new GithubCommitInfo()
-//   commitInfo.title = commitInfoJson.name
-//   commitInfo.description = commitInfoJson.body
-//   commitInfo.url = commitInfoJson.html_url
-//   commitInfo.authorName = commitInfoJson.author.login
-//   commitInfo.authorUrl = commitInfoJson.author.html_url
-//   commitInfo.authorAvatar = commitInfoJson.author.avatar_url
-//   commitInfo.committerName = commitInfoJson.author.login
-//   commitInfo.committerUrl = commitInfoJson.author.html_url
-//   commitInfo.committerAvatar = commitInfoJson.author.avatar_url
-//   // commitInfo.isPreRelease = Boolean.valueOf(commitInfoJson.prerelease)
-//   // commitInfo.tagName = tagName
-//   return commitInfo
-// }
-
-// public GithubReleaseInfo getGithubReleaseInfo(String repoName, String tagName) {
-//   /*  fetch the release info*/
-//   def releaseResponse
-//   GString requestedUrl = "https://api.github.com/repos/${repoName}/releases/tags/${tagName}"
-//   try {
-//     releaseResponse = httpRequest(acceptType: 'APPLICATION_JSON',
-//                                   authentication: 'github.cicd.main.api.credentials',
-//                                   url: requestedUrl)
-//   } catch (IllegalStateException e) {
-//     echo"Release in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
-//     return null
-//   }
-
-//   def releaseInfoJson = new JsonSlurper().parseText(releaseResponse.content)
-//   GithubReleaseInfo releaseInfo = new GithubReleaseInfo()
-//   releaseInfo.title = releaseInfoJson.name
-//   releaseInfo.description = releaseInfoJson.body
-//   releaseInfo.url = releaseInfoJson.html_url
-//   releaseInfo.authorName = releaseInfoJson.author.login
-//   releaseInfo.authorUrl = releaseInfoJson.author.html_url
-//   releaseInfo.authorAvatar = releaseInfoJson.author.avatar_url
-//   releaseInfo.isPreRelease = Boolean.valueOf(releaseInfoJson.prerelease)
-//   releaseInfo.tagName = tagName
-//   return releaseInfo
-// }
 
 public String getMostRecentGitTag() {
   sh "git describe --abbrev=0 --tags >> git-version"

@@ -40,7 +40,7 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
+        GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info

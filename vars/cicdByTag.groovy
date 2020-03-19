@@ -24,7 +24,7 @@ def call() {
         echo "master - Stage: Initialize CICD"
         checkout scm
 
-        // Merge config files
+        // Merge config files (TODO: can be moved out of "node" when workDirectory would be knwon)
         cicdApp = readYaml file: 'config/AppConfig.yaml'
         cicd = mapMerge.merge(cicdGlobal, cicdApp)
 
@@ -35,12 +35,16 @@ def call() {
         Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
         log = new Logger(this)
 
-        // 
+        // Get commit/tag (TODO: can be moved out of "node" when TAG_NAME and GIT_COMMIT would be knwon)
         def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
         echo "GIT_COMMIT:  ${gitCommit}"
 
+        // GitUtils gitUtils = new GitUtils()
+        // GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
+        // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
+
         GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
+        GithubCommitInfo gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
@@ -57,11 +61,11 @@ def call() {
 }
 
 
-public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit) {
-  GitUtils gitUtils = new GitUtils()
-  String currentRepoName = gitUtils.getCurrentRepoName(scm)
-  String currentAccountName = gitUtils.getCurrentAccountName(scm)
+// public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit) {
+//   GitUtils gitUtils = new GitUtils()
+//   String currentRepoName = gitUtils.getCurrentRepoName(scm)
+//   String currentAccountName = gitUtils.getCurrentAccountName(scm)
 
-  GithubCommitInfo gitCommitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-  return gitCommitInfo
-}
+//   GithubCommitInfo gitCommitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+//   return gitCommitInfo
+// }

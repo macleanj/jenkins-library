@@ -32,9 +32,9 @@ class GitInfo {
     git.branchName = context.env.BRANCH_NAME ?: ''
     git.changeId = context.env.CHANGE_ID ?: ''
     git.tagName = context.env.TAG_NAME ?: ''
-    // git.gitHash = context.env.GIT_COMMIT ?: ''
+    git.gitHash = context.env.GIT_COMMIT ?: ''
     // git.gitHash = this.getGitCommit()
-    git.gitHash = "git rev-parse HEAD".exec().trim()
+    // git.gitHash = "git rev-parse HEAD".exec().trim()
     git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
     
     if (git.changeId) {

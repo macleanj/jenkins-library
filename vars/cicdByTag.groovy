@@ -44,7 +44,7 @@ def call() {
         // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
         // GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitCommitInfo = GitUtils.getCommitInfoForCurrentCommit(gitCommit)
+        GithubCommitInfo gitCommitInfo = GitUtils.getCommitInfoForCurrentCommit(gitCommit, scm.getUserRemoteConfigs()[0])
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info

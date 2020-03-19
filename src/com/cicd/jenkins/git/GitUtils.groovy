@@ -27,14 +27,26 @@ public String getCurrentAccountName(Object scm) {
   return matcher[0][1]
 }
 
-public String getGithubCommitByTag(String tagName, Object scm) {
+public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
+  def getResponseTagCommit
   def getResponseTag
   GString requestedUrl
 
   requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/refs/tags/${tagName}"
+  try {
+    getResponseTagCommit = httpRequest(acceptType: 'APPLICATION_JSON',
+                                  authentication: 'github.cicd.main.api.credentials',
+                                  url: requestedUrl)
+  } catch (IllegalStateException e) {
+    echo"Tag in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
+    return null
+  }
+  def tagCommit = new JsonSlurper().parseText(getResponseTagCommit.content).object.sha
+
+  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/tags/${tagCommit}"
   try {
     getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',
@@ -44,8 +56,15 @@ public String getGithubCommitByTag(String tagName, Object scm) {
     return null
   }
 
-  def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
   return tagInfoJson.object.sha
+
+  def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
+  GithubTagInfo tagInfo = new GithubTagInfo()
+  tagInfo.tagCommit = tagCommit
+  tagInfo.gitCommit = tagInfoJson.object.sha
+  tagInfo.tagName = tagInfoJson.tagger.name
+  repoInfo.tagDate = tagInfoJson.tagger.date
+  return tagInfo
 }
 
 public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
@@ -107,9 +126,11 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   repoInfo.authorName = commitInfoJson.author.login
   repoInfo.authorUrl = commitInfoJson.author.html_url
   repoInfo.authorAvatar = commitInfoJson.author.avatar_url
+  repoInfo.authorDate = commitInfoJson.author.date
   repoInfo.committerName = commitInfoJson.author.login
   repoInfo.committerUrl = commitInfoJson.author.html_url
   repoInfo.committerAvatar = commitInfoJson.author.avatar_url
+  repoInfo.committerDate = commitInfoJson.author.date
 
   return repoInfo
 }

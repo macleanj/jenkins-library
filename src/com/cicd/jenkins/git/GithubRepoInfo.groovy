@@ -13,7 +13,9 @@ class GithubRepoInfo implements Serializable {
   String authorName
   String authorUrl
   String authorAvatar
+  Date authorDate
   String committerName
   String committerUrl
   String committerAvatar
+  Date committerDate
 }

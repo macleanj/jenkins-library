@@ -45,7 +45,7 @@ class GitInfoByTag {
       triggerType = "pullRequest"
     } else if (tagName) {
       triggerType = "tag"
-      gitCommit = gitUtils.getGithubCommitByTag(tagName, scm)
+      gitCommit = gitUtils.getGithubByTag(tagName, scm)
       git = gitUtils.getGithubRepoInfo(gitCommit, scm)
     } else {
       triggerType = "unknown"

@@ -63,7 +63,6 @@ class GitInfoByTag {
 
       if (tagNameArray) {
         // Overall allowed tagPattern is matched
-        println prettyPrint(toJson(tagNameArray[0]))
         def tagTypeKey = tagNameArray[0][1]
         def versionKey = tagNameArray[0][2]
         def partTwo = tagNameArray[0][3]

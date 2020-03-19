@@ -124,11 +124,11 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   repoInfo.authorName = commitInfoJson.author.login
   repoInfo.authorUrl = commitInfoJson.author.html_url
   repoInfo.authorAvatar = commitInfoJson.author.avatar_url
-  repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.author.date)
+  repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.author.date)
   repoInfo.committerName = commitInfoJson.committer.login
   repoInfo.committerUrl = commitInfoJson.committer.html_url
   repoInfo.committerAvatar = commitInfoJson.committer.avatar_url
-  repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.committer.date)
+  repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.committer.date)
 
   return repoInfo
 }

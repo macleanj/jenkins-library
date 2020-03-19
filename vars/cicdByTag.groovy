@@ -2,10 +2,6 @@ import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfoByTag
-
-import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.GithubRepoInfo
-
 import static groovy.json.JsonOutput.*
 
 def call() {
@@ -37,18 +33,6 @@ def call() {
         Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
         log = new Logger(this)
 
-        // Get commit/tag (TODO: can be moved out of "node" when TAG_NAME and GIT_COMMIT would be knwon)
-        // def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
-        // echo "GIT_COMMIT:  ${gitCommit}"
-
-        // GitUtils gitUtils = new GitUtils()
-        // GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
-        // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
-
-        // GitUtils gitUtils = new GitUtils()
-        // gitCommitInfo = gitUtils.getGithubRepoInfo(gitCommit, scm)
-        // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo.sort()))
-
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
         def gitInfoByTag = new GitInfoByTag(this)
         cicd = gitInfoByTag.info(cicd, scm)
@@ -57,17 +41,5 @@ def call() {
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
   }
-
-
   return [cicd, log]
 }
-
-
-// public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit) {
-//   GitUtils gitUtils = new GitUtils()
-//   String currentRepoName = gitUtils.getCurrentRepoName(scm)
-//   String currentAccountName = gitUtils.getCurrentAccountName(scm)
-
-//   GithubCommitInfo gitCommitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-//   return gitCommitInfo
-// }

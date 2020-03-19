@@ -39,8 +39,8 @@ def call() {
         def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
         echo "GIT_COMMIT:  ${gitCommit}"
 
-        // GitUtils gitUtils = new GitUtils()
-        def gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
+        GitUtils gitUtils = new GitUtils()
+        def gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
         
 

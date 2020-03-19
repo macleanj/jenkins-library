@@ -52,7 +52,7 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
     return null
   }
 
-  requestedUrl = "https://api.github.com/repos/${repoName}"
+  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}"
   try {
     getResponseRepo = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',

@@ -22,6 +22,7 @@ def call() {
   node ('master') {
       stage('Initialize CICD (Library)') {
         echo "master - Stage: Initialize CICD"
+        echo scm.workingDirectory()
         checkout scm
 
         // Merge config files
@@ -49,7 +50,6 @@ def call() {
         def gitInfo = new GitInfo(this)
         cicd = gitInfo.get(cicd, 'byTag')
 
-        log.trace("CICD SCM\n" + prettyPrint(toJson(scm)))
         log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }

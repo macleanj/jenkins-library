@@ -12,8 +12,9 @@ def call() {
   def log
   def mapMerge = new MapMerge()
 
-  def gitCommitTest = sh(script: "git rev-parse HEAD", returnStdout: true)
-  echo "GIT_COMMIT Test:  ${gitCommitTest}"
+  println "scm url: " + scm.getUserRemoteConfigs()[0].url
+  println "scm name: " + scm.getUserRemoteConfigs()[0].name
+  println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
 
   // Getting custom library config
   // Global config for the environment

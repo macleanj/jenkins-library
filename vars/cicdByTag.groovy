@@ -12,9 +12,14 @@ def call() {
   def log
   def mapMerge = new MapMerge()
 
-  println "scm url: " + scm.getUserRemoteConfigs()[0].url
-  println "scm name: " + scm.getUserRemoteConfigs()[0].name
-  println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
+  echo "SCM getUserRemoteConfigs\n" + prettyPrint(toJson(scm.getUserRemoteConfigs()[0]))
+  echo "SCM branches\n" + prettyPrint(toJson(scm.branches()[0]))
+
+  // println "scm url: " + scm.getUserRemoteConfigs()[0].url
+  // println "scm name: " + scm.getUserRemoteConfigs()[0].name
+  // println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
+
+  // println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
 
   // Getting custom library config
   // Global config for the environment

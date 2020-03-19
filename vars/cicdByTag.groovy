@@ -2,6 +2,7 @@ import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
+import com.cicd.jenkins.git.GitUtils
 import static groovy.json.JsonOutput.*
 
 def call() {

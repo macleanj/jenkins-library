@@ -22,21 +22,7 @@ def call() {
   node ('master') {
       stage('Initialize CICD (Library)') {
         echo "master - Stage: Initialize CICD"
-        // // Checkout the repository and save the resulting metadata
-        // def scmVars = checkout([
-        //   $class: 'GitSCM'
-        // ])
-        // log.debug("scmVars: " + scmVars)
         checkout scm
-
-        // 
-        def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
-        echo "GIT_COMMIT:  ${gitCommit}"
-
-        GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfoTemp = getReleaseInfoForCurrentTag(gitCommit)
-        echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
-        
 
         // Merge config files
         cicdApp = readYaml file: 'config/AppConfig.yaml'
@@ -49,10 +35,21 @@ def call() {
         Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
         log = new Logger(this)
 
+        // 
+        def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
+        echo "GIT_COMMIT:  ${gitCommit}"
+
+        GitUtils gitUtils = new GitUtils()
+        GithubCommitInfo gitInfoTemp = getReleaseInfoForCurrentTag(gitCommit)
+        echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
+        
+
+
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
         def gitInfo = new GitInfo(this)
         cicd = gitInfo.get(cicd, 'byTag')
 
+        log.trace("CICD SCM\n" + prettyPrint(toJson(scm)))
         log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }

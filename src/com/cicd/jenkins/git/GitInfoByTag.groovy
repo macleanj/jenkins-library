@@ -133,8 +133,8 @@ class GitInfoByTag {
       } else {
           tag.tagType="overall"
           log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
-                }
-    // Tag
+      }
+      // Tag
     
     } else if (git.triggerType == "pullRequest") { 
       cicd.job.enabled = 1
@@ -147,6 +147,8 @@ class GitInfoByTag {
 
       // Used environment mapping
       cicd.job.environment = cicd.deploy[cicd.pr.buildEnvironment]
+      // pullRequest
+
     } else { 
       log.error("Unknown trigger")
           }

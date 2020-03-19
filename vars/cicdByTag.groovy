@@ -3,7 +3,6 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
 import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.getCommitInfoForCurrentCommit
 import com.cicd.jenkins.git.GithubCommitInfo
 
 import static groovy.json.JsonOutput.*
@@ -41,7 +40,7 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         // GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
+        def gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
         
 

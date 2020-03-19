@@ -3,8 +3,7 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
 import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.GitUtilsConstants
-import com.cicd.jenkins.git.GithubReleaseInfo
+import com.cicd.jenkins.git.GithubCommitInfo
 
 import static groovy.json.JsonOutput.*
 
@@ -30,12 +29,13 @@ def call() {
         // log.debug("scmVars: " + scmVars)
         checkout scm
 
-        def x = sh(script: "git rev-parse HEAD", returnStdout: true)
-        echo "GIT_COMMIT:  ${x}"
+        // 
+        def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
+        echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        GithubReleaseInfo releaseInfo = getReleaseInfoForCurrentTag(TAG_NAME)
-        echo "releaseInfo\n" + prettyPrint(toJson(releaseInfo))
+        GithubCommitInfo gitInfo = getReleaseInfoForCurrentTag(gitCommit)
+        echo "gitInfo\n" + prettyPrint(toJson(gitInfo))
         
 
         // Merge config files
@@ -63,10 +63,11 @@ def call() {
 }
 
 
-public GithubReleaseInfo getReleaseInfoForCurrentTag(String tagName) {
+public GithubCommitInfo getReleaseInfoForCurrentTag(String gitCommit) {
   GitUtils gitUtils = new GitUtils()
   String currentRepoName = gitUtils.getCurrentRepoName(scm)
+  String currentAccountName = gitUtils.getCurrentAccountName(scm)
 
-  GithubReleaseInfo releaseInfo = gitUtils.getGithubReleaseInfo(tagName, currentRepoName)
-  return releaseInfo
+  GithubCommitInfo gitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+  return gitInfo
 }

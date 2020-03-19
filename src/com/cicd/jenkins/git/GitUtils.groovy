@@ -1,19 +1,11 @@
 package com.cicd.jenkins.git
 
 import groovy.json.JsonSlurper
-
 import java.util.regex.Matcher
-
-import static com.cicd.jenkins.git.GitUtilsConstants.DEPLOY_ON_PUSH_BRANCHES_PREFIX
-import static com.cicd.jenkins.git.GitUtilsConstants.TAG_BRANCHES_PREFIX
 
 public boolean isTag(String checkedOutBranchName) {
   boolean tagIsNotNull = checkedOutBranchName?.trim()
   return tagIsNotNull
-}
-
-public boolean isDeployOnPushForBranch(String branchName) {
-  return branchName.startsWith(DEPLOY_ON_PUSH_BRANCHES_PREFIX)
 }
 
 public String getTagNameFromBranchName(String checkedOutBranchName) {
@@ -23,18 +15,51 @@ public String getTagNameFromBranchName(String checkedOutBranchName) {
 
 public String getCurrentRepoName(Object scm) {
   String gitUrl = scm.getUserRemoteConfigs()[0].url
-  Matcher matcher = (gitUrl =~ /.*\/(.*).git/)
+  Matcher matcher = (gitUrl =~ /.*[^\/]+\/[^\/]+\/([^\/]+).git/)
   /*  get the value matching the group */
   return matcher[0][1]
 }
 
-public GithubReleaseInfo getGithubReleaseInfo(String tagName, String repoName) {
+public String getCurrentAccountName(Object scm) {
+  String gitUrl = scm.getUserRemoteConfigs()[0].url
+  Matcher matcher = (gitUrl =~ /.*[^\/]+\/([^\/]+)\/[^\/]+.git/)
+  /*  get the value matching the group */
+  return matcher[0][1]
+}
+
+public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
+  /*  fetch the commit info*/
+  def commitResponse
+  GString requestedUrl = "https://api.github.com/repos/${repoName}/commits/${gitCommit}"
+  try {
+    commitResponse = httpRequest(acceptType: 'APPLICATION_JSON',
+                                  authentication: 'github.cicd.main.api.credentials',
+                                  url: requestedUrl)
+  } catch (IllegalStateException e) {
+    echo"Commit in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
+    return null
+  }
+
+  def commitInfoJson = new JsonSlurper().parseText(commitResponse.content)
+  GithubCommitInfo commitInfo = new GithubCommitInfo()
+  commitInfo.title = commitInfoJson.name
+  commitInfo.description = commitInfoJson.body
+  commitInfo.url = commitInfoJson.html_url
+  commitInfo.authorName = commitInfoJson.author.login
+  commitInfo.authorUrl = commitInfoJson.author.html_url
+  commitInfo.authorAvatar = commitInfoJson.author.avatar_url
+  // commitInfo.isPreRelease = Boolean.valueOf(commitInfoJson.prerelease)
+  commitInfo.tagName = tagName
+  return commitInfo
+}
+
+public GithubReleaseInfo getGithubReleaseInfo(String repoName, String tagName) {
   /*  fetch the release info*/
   def releaseResponse
-  GString requestedUrl = "https://api.github.com/repos/Financial-Times/${repoName}/releases/tags/${tagName}"
+  GString requestedUrl = "https://api.github.com/repos/${repoName}/releases/tags/${tagName}"
   try {
     releaseResponse = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'ft.github.credentials',
+                                  authentication: 'github.cicd.main.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"Release in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"

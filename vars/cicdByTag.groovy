@@ -11,15 +11,7 @@ def call() {
   def cicd = [:]
   def log
   def mapMerge = new MapMerge()
-
-  echo "SCM getUserRemoteConfigs\n" + scm.getUserRemoteConfigs()[0]
-  echo "SCM branches\n" + scm.branches[0].name
-
-  // println "scm url: " + scm.getUserRemoteConfigs()[0].url
-  // println "scm name: " + scm.getUserRemoteConfigs()[0].name
-  // println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
-
-  // println "scm refspec: " + scm.getUserRemoteConfigs()[0].refspec
+  def gitUtils = new GitUtils()
 
   // Getting custom library config
   // Global config for the environment
@@ -52,7 +44,7 @@ def call() {
         // GithubCommitInfo gitCommitInfo = getCommitInfoForCurrentCommit(gitCommit)
         // echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 
-        GitUtils gitUtils = new GitUtils()
+        // GitUtils gitUtils = new GitUtils()
         GithubRepoInfo gitCommitInfo = gitUtils.getGithubRepoInfo(gitCommit, scm)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
 

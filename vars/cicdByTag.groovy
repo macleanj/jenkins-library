@@ -22,7 +22,6 @@ def call() {
   node ('master') {
       stage('Initialize CICD (Library)') {
         echo "master - Stage: Initialize CICD"
-        echo scm.workingDirectory()
         checkout scm
 
         // Merge config files
@@ -40,8 +39,8 @@ def call() {
         def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
         echo "GIT_COMMIT:  ${gitCommit}"
 
-        GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfoTemp = getReleaseInfoForCurrentTag(gitCommit)
+        // GitUtils gitUtils = new GitUtils()
+        GithubCommitInfo gitInfoTemp = getCommitInfoForCurrentTag(gitCommit)
         echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
         
 
@@ -60,10 +59,12 @@ def call() {
 }
 
 
-public GithubCommitInfo getReleaseInfoForCurrentTag(String gitCommit) {
-  GitUtils gitUtils = new GitUtils()
-  String currentRepoName = gitUtils.getCurrentRepoName(scm)
-  String currentAccountName = gitUtils.getCurrentAccountName(scm)
+public GithubCommitInfo getCommitInfoForCurrentTag(String gitCommit) {
+  // GitUtils gitUtils = new GitUtils()
+  // String currentRepoName = gitUtils.getCurrentRepoName(scm)
+  // String currentAccountName = gitUtils.getCurrentAccountName(scm)
+  String currentRepoName = getCurrentRepoName(scm)
+  String currentAccountName = getCurrentAccountName(scm)
 
   GithubCommitInfo gitInfoTemp = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
   return gitInfoTemp

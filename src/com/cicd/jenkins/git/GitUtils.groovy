@@ -62,9 +62,9 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
     return null
   }
 
-  getResponseCommit = "https://api.github.com/repos/${accountName}/${repoName}/commits/${gitCommit}"
+  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/commits/${gitCommit}"
   try {
-    getResponse = httpRequest(acceptType: 'APPLICATION_JSON',
+    getResponseCommit = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {

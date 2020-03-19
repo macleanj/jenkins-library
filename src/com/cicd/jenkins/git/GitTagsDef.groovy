@@ -1,6 +1,6 @@
 package com.cicd.jenkins.git
 
-class TriggerByTagConstants {
+class GitTagsDef {
 
   public static final String buildTag = "b"
   public static final String deployTag = "d"

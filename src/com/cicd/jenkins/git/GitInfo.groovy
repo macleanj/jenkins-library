@@ -2,7 +2,7 @@ package com.cicd.jenkins.git
 
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
-import com.cicd.jenkins.git.TriggerByTagConstants
+import com.cicd.jenkins.git.GitTagsDef
 import static groovy.json.JsonOutput.*
 
 /*
@@ -52,7 +52,7 @@ class GitInfo {
       if (git.triggerType == 'tag') { 
         cicd.job.enabled = 0
         // Only supported patterns will match
-        def TagNamePattern="^([${TriggerByTagConstants.buildTag}${TriggerByTagConstants.deployTag}])([${TriggerByTagConstants.versionTag}${TriggerByTagConstants.hashTag}])-([a-z0-9._]+)[-]*([0-9.]*)\$"
+        def TagNamePattern="^([${GitTagsDef.buildTag}${GitTagsDef.deployTag}])([${GitTagsDef.versionTag}${GitTagsDef.hashTag}])-([a-z0-9._]+)[-]*([0-9.]*)\$"
         def tagNameArray = (git.tagName =~ /${TagNamePattern}/)
 
         if (tagNameArray) {
@@ -64,7 +64,7 @@ class GitInfo {
           def partThree = tagNameArray[0][4]
 
           // Build instantiation
-          if (tagTypeKey == TriggerByTagConstants.buildTag) {
+          if (tagTypeKey == GitTagsDef.buildTag) {
             git.tagType="build"
             // log.info("Tag:" + git.tagType)
             println "Tag: " + git.tagType
@@ -78,7 +78,7 @@ class GitInfo {
                 git.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
 
                 // Set version
-                git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partThree : git.gitHashShort
+                git.versionId = (versionKey == GitTagsDef.versionTag) ? partThree : git.gitHashShort
 
                 // Used environment mapping
                 cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
@@ -95,7 +95,7 @@ class GitInfo {
               cicd.job.deployEnabled = 0
 
               // Set version
-              git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partTwo : git.gitHashShort
+              git.versionId = (versionKey == GitTagsDef.versionTag) ? partTwo : git.gitHashShort
 
               // Used environment mapping
               cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
@@ -105,7 +105,7 @@ class GitInfo {
             }
 
           // Deployment instantiation
-          } else if (tagTypeKey == TriggerByTagConstants.deployTag) {
+          } else if (tagTypeKey == GitTagsDef.deployTag) {
             git.tagType="deployment"
             // log.info("Tag:" + git.tagType)
             println "Tag:" + git.tagType
@@ -117,7 +117,7 @@ class GitInfo {
                 cicd.job.deployEnabled = 1
 
                 // Set version
-                git.versionId = (versionKey == TriggerByTagConstants.versionTag) ? partThree : git.gitHashShort
+                git.versionId = (versionKey == GitTagsDef.versionTag) ? partThree : git.gitHashShort
 
                 // Used environment mapping
                 cicd.job.environment = cicd.deploy[git.envKey]

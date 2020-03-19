@@ -34,8 +34,8 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfo = getReleaseInfoForCurrentTag(gitCommit)
-        echo "gitInfo\n" + prettyPrint(toJson(gitInfo))
+        GithubCommitInfo gitInfoTemp = getReleaseInfoForCurrentTag(gitCommit)
+        echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
         
 
         // Merge config files
@@ -68,6 +68,6 @@ public GithubCommitInfo getReleaseInfoForCurrentTag(String gitCommit) {
   String currentRepoName = gitUtils.getCurrentRepoName(scm)
   String currentAccountName = gitUtils.getCurrentAccountName(scm)
 
-  GithubCommitInfo gitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-  return gitInfo
+  GithubCommitInfo gitInfoTemp = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+  return gitInfoTemp
 }

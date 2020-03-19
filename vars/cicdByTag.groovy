@@ -39,8 +39,8 @@ def call() {
         def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true)
         echo "GIT_COMMIT:  ${gitCommit}"
 
-        // GitUtils gitUtils = new GitUtils()
-        GithubCommitInfo gitInfoTemp = getCommitInfoForCurrentTag(gitCommit)
+        GitUtils gitUtils = new GitUtils()
+        GithubCommitInfo gitInfoTemp = gitUtils.getCommitInfoForCurrentTag(gitCommit)
         echo "gitInfoTemp\n" + prettyPrint(toJson(gitInfoTemp))
         
 
@@ -60,11 +60,9 @@ def call() {
 
 
 public GithubCommitInfo getCommitInfoForCurrentTag(String gitCommit) {
-  // GitUtils gitUtils = new GitUtils()
-  // String currentRepoName = gitUtils.getCurrentRepoName(scm)
-  // String currentAccountName = gitUtils.getCurrentAccountName(scm)
-  String currentRepoName = getCurrentRepoName(scm)
-  String currentAccountName = getCurrentAccountName(scm)
+  GitUtils gitUtils = new GitUtils()
+  String currentRepoName = gitUtils.getCurrentRepoName(scm)
+  String currentAccountName = gitUtils.getCurrentAccountName(scm)
 
   GithubCommitInfo gitInfoTemp = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
   return gitInfoTemp

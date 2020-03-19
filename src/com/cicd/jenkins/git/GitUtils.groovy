@@ -61,8 +61,8 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
-  repoInfo.tagDate = tagInfoJson.tagger.date
-  return repoInfo
+  tagInfo.tagDate = tagInfoJson.tagger.date
+  return tagInfo
 }
 
 public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {

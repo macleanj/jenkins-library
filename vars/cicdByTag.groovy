@@ -13,7 +13,7 @@ def call() {
   def mapMerge = new MapMerge()
 
   echo "SCM getUserRemoteConfigs\n" + scm.getUserRemoteConfigs()[0]
-  echo "SCM branches\n" + scm.branches[0]
+  echo "SCM branches\n" + scm.branches[0].name
 
   // println "scm url: " + scm.getUserRemoteConfigs()[0].url
   // println "scm name: " + scm.getUserRemoteConfigs()[0].name

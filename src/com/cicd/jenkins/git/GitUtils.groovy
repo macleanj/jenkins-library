@@ -1,11 +1,19 @@
 package com.cicd.jenkins.git
 
 import groovy.json.JsonSlurper
+
 import java.util.regex.Matcher
+
+import static com.cicd.jenkins.git.GitUtilsConstants.DEPLOY_ON_PUSH_BRANCHES_PREFIX
+import static com.cicd.jenkins.git.GitUtilsConstants.TAG_BRANCHES_PREFIX
 
 public boolean isTag(String checkedOutBranchName) {
   boolean tagIsNotNull = checkedOutBranchName?.trim()
   return tagIsNotNull
+}
+
+public boolean isDeployOnPushForBranch(String branchName) {
+  return branchName.startsWith(DEPLOY_ON_PUSH_BRANCHES_PREFIX)
 }
 
 public String getTagNameFromBranchName(String checkedOutBranchName) {

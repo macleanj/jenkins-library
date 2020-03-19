@@ -3,6 +3,9 @@ import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.git.GitInfo
 import com.cicd.jenkins.git.GitUtils
+import com.cicd.jenkins.git.GitUtilsConstants
+import com.cicd.jenkins.git.GithubReleaseInfo
+
 import static groovy.json.JsonOutput.*
 
 def call() {
@@ -30,6 +33,11 @@ def call() {
         def x = sh(script: "git rev-parse HEAD", returnStdout: true)
         echo "GIT_COMMIT:  ${x}"
 
+        GitUtils gitUtils = new GitUtils()
+        GithubReleaseInfo releaseInfo = getReleaseInfoForCurrentTag(TAG_NAME)
+        log.debug("releaseInfo\n" + prettyPrint(toJson(releaseInfo)))
+        
+
         // Merge config files
         cicdApp = readYaml file: 'config/AppConfig.yaml'
         cicd = mapMerge.merge(cicdGlobal, cicdApp)
@@ -52,4 +60,13 @@ def call() {
 
 
   return [cicd, log]
+}
+
+
+public GithubReleaseInfo getReleaseInfoForCurrentTag(String tagName) {
+  GitUtils gitUtils = new GitUtils()
+  String currentRepoName = gitUtils.getCurrentRepoName(scm)
+
+  GithubReleaseInfo releaseInfo = gitUtils.getGithubReleaseInfo(tagName, currentRepoName)
+  return releaseInfo
 }

@@ -37,7 +37,6 @@ class GitInfoByTag {
   // --- Method Logic
   def info(def Map cicd, def Object scm) {
     def triggerType
-    def gitCommit
     def git = [:]
     def changeId = context.env.CHANGE_ID ?: ''
     def tagName = context.env.TAG_NAME ?: ''
@@ -46,8 +45,8 @@ class GitInfoByTag {
       triggerType = "pullRequest"
     } else if (tagName) {
       triggerType = "tag"
-      gitTag = gitUtils.getGithubByTag(tagName, scm)
-      gitRepo = gitUtils.getGithubRepoInfo(gitTag.gitCommit, scm)
+      def gitTag = gitUtils.getGithubByTag(tagName, scm)
+      def gitRepo = gitUtils.getGithubRepoInfo(gitTag.gitCommit, scm)
       git = mapMerge.merge(gitTag, gitRepo)
     } else {
       triggerType = "unknown"

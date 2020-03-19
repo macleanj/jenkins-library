@@ -3,7 +3,6 @@ package com.cicd.jenkins.git
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.GitUtils
-import com.cicd.jenkins.git.GithubRepoInfo
 import com.cicd.jenkins.git.GitTags
 import static groovy.json.JsonOutput.*
 

@@ -8,7 +8,6 @@ def call() {
   def cicd = [:]
   def log
   def mapMerge = new MapMerge()
-  def gitUtils = new GitUtils()
 
   // Getting custom library config
   // Global config for the environment

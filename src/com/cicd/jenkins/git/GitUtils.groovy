@@ -34,7 +34,7 @@ public String getGithubCommitByTag(String tagName, Object scm) {
   def getResponseTag
   GString requestedUrl
 
-  requestedUrl = "https://api.github.com/users/${accountName}/${repoName}/git/refs/tags/${tagName}"
+  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/refs/tags/${tagName}"
   try {
     getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',

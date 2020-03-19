@@ -40,10 +40,8 @@ def call() {
         echo "GIT_COMMIT:  ${gitCommit}"
 
         GitUtils gitUtils = new GitUtils()
-        def gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
+        GithubCommitInfo gitCommitInfo = gitUtils.getCommitInfoForCurrentCommit(gitCommit)
         echo "gitCommitInfo\n" + prettyPrint(toJson(gitCommitInfo))
-        
-
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
         def gitInfo = new GitInfo(this)
@@ -54,5 +52,16 @@ def call() {
       }
   }
 
+
   return [cicd, log]
+}
+
+
+public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit) {
+  GitUtils gitUtils = new GitUtils()
+  String currentRepoName = gitUtils.getCurrentRepoName(scm)
+  String currentAccountName = gitUtils.getCurrentAccountName(scm)
+
+  GithubCommitInfo gitCommitInfo = gitUtils.getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+  return gitCommitInfo
 }

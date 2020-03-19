@@ -28,12 +28,12 @@ public String getCurrentAccountName(Object scm) {
 }
 
 
-public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
-  String currentRepoName = getCurrentRepoName(scm)
-  String currentAccountName = getCurrentAccountName(scm)
-  GithubCommitInfo gitCommitInfo = getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
-  return gitCommitInfo
-}
+// public GithubCommitInfo getCommitInfoForCurrentCommit(String gitCommit, Object scm) {
+//   String currentRepoName = getCurrentRepoName(scm)
+//   String currentAccountName = getCurrentAccountName(scm)
+//   GithubCommitInfo gitCommitInfo = getGithubCommitInfo(currentAccountName + "/" + currentRepoName, gitCommit)
+//   return gitCommitInfo
+// }
 
 public GithubCommitInfo getGithubCommitInfo(String repoName, String gitCommit) {
   /*  fetch the commit info*/

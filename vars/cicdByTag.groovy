@@ -35,7 +35,7 @@ def call() {
 
         GitUtils gitUtils = new GitUtils()
         GithubReleaseInfo releaseInfo = getReleaseInfoForCurrentTag(TAG_NAME)
-        log.debug("releaseInfo\n" + prettyPrint(toJson(releaseInfo)))
+        echo "releaseInfo\n" + prettyPrint(toJson(releaseInfo))
         
 
         // Merge config files

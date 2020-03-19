@@ -61,7 +61,7 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
-  tagInfo.tagDate = fromISO8601UTC(tagInfoJson.tagger.date)
+  tagInfo.tagDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", tagInfoJson.tagger.date)
   return tagInfo
 }
 
@@ -124,11 +124,11 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   repoInfo.authorName = commitInfoJson.author.login
   repoInfo.authorUrl = commitInfoJson.author.html_url
   repoInfo.authorAvatar = commitInfoJson.author.avatar_url
-  repoInfo.authorDate = fromISO8601UTC(commitInfoJson.author.date)
-  repoInfo.committerName = commitInfoJson.author.login
-  repoInfo.committerUrl = commitInfoJson.author.html_url
-  repoInfo.committerAvatar = commitInfoJson.author.avatar_url
-  repoInfo.committerDate = fromISO8601UTC(commitInfoJson.author.date)
+  repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.author.date)
+  repoInfo.committerName = commitInfoJson.committer.login
+  repoInfo.committerUrl = commitInfoJson.committer.html_url
+  repoInfo.committerAvatar = commitInfoJson.committer.avatar_url
+  repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.committer.date)
 
   return repoInfo
 }
@@ -149,25 +149,4 @@ public String getLatestCommit() {
 
 public String getShortLatestCommit() {
   return getLatestCommit().take(6)
-}
-
-public static String toISO8601UTC(Date date) {
-  TimeZone tz = TimeZone.getTimeZone("UTC");
-  DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-  df.setTimeZone(tz);
-  return df.format(date);
-}
-
-public static Date fromISO8601UTC(String dateStr) {
-  TimeZone tz = TimeZone.getTimeZone("UTC");
-  DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-  df.setTimeZone(tz);
-  
-  try {
-    return df.parse(dateStr);
-  } catch (ParseException e) {
-    e.printStackTrace();
-  }
-  
-  return null;
 }

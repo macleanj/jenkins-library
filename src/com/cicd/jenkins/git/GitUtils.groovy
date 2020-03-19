@@ -46,7 +46,7 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   }
   def tagCommit = new JsonSlurper().parseText(getResponseTagCommit.content).object.sha
 
-  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/tags/${tagCommit}"
+  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/tags/${tagCommit}"
   try {
     getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',
@@ -60,7 +60,7 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
 
   def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
   GithubTagInfo tagInfo = new GithubTagInfo()
-  tagInfo.tagCommit = tagCommit
+  tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
   repoInfo.tagDate = tagInfoJson.tagger.date

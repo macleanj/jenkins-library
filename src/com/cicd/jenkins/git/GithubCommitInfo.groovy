@@ -1,6 +1,6 @@
 package com.cicd.jenkins.git
 
-class GithubReleaseInfo implements Serializable {
+class GithubCommitInfo implements Serializable {
   String authorName
   String authorUrl
   String authorAvatar

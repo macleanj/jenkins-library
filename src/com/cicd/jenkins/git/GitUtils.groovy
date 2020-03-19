@@ -56,15 +56,13 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
     return null
   }
 
-  return tagInfoJson.object.sha
-
   def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
   GithubTagInfo tagInfo = new GithubTagInfo()
   tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
   repoInfo.tagDate = tagInfoJson.tagger.date
-  return tagInfo
+  return repoInfo
 }
 
 public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {

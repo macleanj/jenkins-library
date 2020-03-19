@@ -27,7 +27,7 @@ public String getCurrentAccountName(Object scm) {
   return matcher[0][1]
 }
 
-public GithubCommitByTag getGithubCommitByTag(String tagName, Object scm) {
+public String getGithubCommitByTag(String tagName, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)

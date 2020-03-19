@@ -36,13 +36,13 @@ public String getCurrentAccountName(Object scm) {
 
 public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   /*  fetch the commit info*/
+  String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
-  String gitCommit = getCurrentAccountName(scm)
   def getResponseRepo
   def getResponseCommit
   GString requestedUrl
 
-  requestedUrl = "https://api.github.com/users/${repoName}"
+  requestedUrl = "https://api.github.com/users/${accountName}"
   try {
     getResponseUser = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',
@@ -62,7 +62,7 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
     return null
   }
 
-  getResponseCommit = "https://api.github.com/repos/${repoName}/commits/${gitCommit}"
+  getResponseCommit = "https://api.github.com/repos/${accountName}/${repoName}/commits/${gitCommit}"
   try {
     getResponse = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.cicd.main.api.credentials',

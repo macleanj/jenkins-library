@@ -27,7 +27,7 @@ public String getCurrentAccountName(Object scm) {
   return matcher[0][1]
 }
 
-public GithubTagInfo getGithubByTag(String tagName, Object scm) {
+public getGithubByTag(String tagName, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
@@ -57,7 +57,7 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   }
 
   def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
-  GithubTagInfo tagInfo = new GithubTagInfo()
+  tagInfo = [:]
   tagInfo.tagCommit = tagInfoJson.sha
   tagInfo.gitCommit = tagInfoJson.object.sha
   tagInfo.tagName = tagInfoJson.tagger.name
@@ -65,7 +65,7 @@ public GithubTagInfo getGithubByTag(String tagName, Object scm) {
   return tagInfo
 }
 
-public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
+public getGithubRepoInfo(String gitCommit, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
@@ -111,7 +111,7 @@ public GithubRepoInfo getGithubRepoInfo(String gitCommit, Object scm) {
   def repoInfoJson = new JsonSlurper().parseText(getResponseRepo.content)
   def commitInfoJson = new JsonSlurper().parseText(getResponseCommit.content)
 
-  GithubRepoInfo repoInfo = new GithubRepoInfo()
+  repoInfo = [:]
   repoInfo.repoName = repoInfoJson.name
   repoInfo.repoFullName = repoInfoJson.full_name
   repoInfo.repoDescription = repoInfoJson.description

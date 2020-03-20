@@ -156,7 +156,7 @@ class GitInfoByTag {
     // END VALIDATION
 
     // Merge <env> with generic
-    def envGeneric = cicd.config.environment.generic
+    def envGeneric = cicd.config.environments.generic
     def envSpecific = cicd.job.environment
     cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
 

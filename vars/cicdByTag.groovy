@@ -42,7 +42,7 @@ def call() {
         cicd.job.agent = cicd.config.agent.k8
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0           // Disable staged
-          cicd.job.agent.name = 'base'   // Consume as minimal resources as possible.
+          cicd.job.agent.name = 'base-disabled'   // Consume as minimal resources as possible.
         }
 
 

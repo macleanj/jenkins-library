@@ -10,10 +10,10 @@ import org.yaml.snakeyaml.constructor.SafeConstructor
   https://github.com/OndraZizka/yaml-merge/blob/master/src/main/java/org/cobbzilla/util/yml/YmlMerger.java
  */
 
-class MyYaml {
+class YamlMerge {
   private final Yaml parser
 
-  MyYaml() {
+  YamlMerge() {
     parser = new Yaml(new SafeConstructor())
   }
 

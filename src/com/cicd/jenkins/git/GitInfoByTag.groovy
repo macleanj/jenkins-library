@@ -161,7 +161,8 @@ class GitInfoByTag {
 
     log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
-    def tempEnv = MapMerge.merge(envGeneric, envSpecific)
+    def mapUtils = new MapUtils()
+    def tempEnv = mapUtils.merge(envGeneric, envSpecific)
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(tempEnv)))
     // cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
     // log.debug("Library: envSpecific\n" + prettyPrint(toJson(cicd.job.environment)))

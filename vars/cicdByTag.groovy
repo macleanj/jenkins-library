@@ -8,7 +8,7 @@ import static groovy.json.JsonOutput.*
 def call() {
   def cicd = [:]
   def log
-  def mapMerge = new MapMerge()
+  def mapUtils = new MapUtils()
 
   // Getting custom library config
   // Global config for the environment
@@ -25,7 +25,7 @@ def call() {
         // Merge config files
         // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
         cicdApp = readYaml file: 'config/AppConfig.yaml'
-        cicd = MapUtils.merge(cicdGlobal, cicdApp)
+        cicd = mapUtils.merge(cicdGlobal, cicdApp)
 
         // Initialize logger
         // Pass it to env/'this' to be able to enable global debug (both in classes and containers)

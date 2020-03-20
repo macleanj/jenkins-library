@@ -156,11 +156,12 @@ class GitInfoByTag {
     // END VALIDATION
 
     // Merge <env> with generic
-    def envGeneric = cicd.config.environments.generic
-    def envSpecific = cicd.job.environment
+    def Map envGeneric = cicd.config.environments.generic
+    def Map envSpecific = cicd.job.environment
     log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
     cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
+    log.debug("Library: envSpecific\n" + prettyPrint(toJson(cicd.job.environment)))
 
     // Copy of used agent
     cicd.job.agent = [:]

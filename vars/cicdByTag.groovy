@@ -42,14 +42,19 @@ def call() {
         // Job management
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0           // Disable staged
-          cicd.job.agent.name = 'base'   // Consume as minimal resources as possible.
+
+          // def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
+          cicd.job.environment.agent.k8.name = 'base'   // Consume as minimal resources as possible.
         }
+
+        // // Copy of used agent
+        // def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
 
         log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
 
         // Kubernetes agent definition
-        cicd.job.agent.k8sagentConfig = k8sAgent(cicd.job.agent)
+        cicd.job.environment.agent.k8.config = k8sAgent(cicd.job.environment.agent.k8.name)
       }
   }
   return [cicd, log]

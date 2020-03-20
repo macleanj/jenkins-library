@@ -20,7 +20,7 @@ class GitInfoByTag {
   def context
   def log
   def gitUtils
-  def mapMerge
+  def mapUtils
   
   // --- Constructor
   GitInfoByTag(context) {
@@ -30,6 +30,7 @@ class GitInfoByTag {
     Logger.init(this.context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
     this.log = new Logger(this)
     this.gitUtils = new GitUtils()
+    this.mapUtils = new MapUtils()
   }
 
   // --- Method Logic
@@ -155,18 +156,10 @@ class GitInfoByTag {
           }
     // END VALIDATION
 
-    // Merge <env> with generic
-    def Map envGeneric = MapUtils.deepCopy(cicd.config.environments.generic)
-    def Map envSpecific = MapUtils.deepCopy(cicd.job.environment)
-
-    log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
-    log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
-    def mapUtils = new MapUtils()
+    // Merge specific with generic environment
+    def Map envGeneric = mapUtils.deepCopy(cicd.config.environments.generic)
+    def Map envSpecific = mapUtils.deepCopy(cicd.job.environment)
     cicd.job.environment = mapUtils.merge(envGeneric, envSpecific)
-    log.debug("Library: merged\n" + prettyPrint(toJson(cicd)))
-
-    // Copy of used agent
-    def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
 
     cicd.git = git
     cicd.tag = tag

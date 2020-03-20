@@ -41,15 +41,16 @@ def call() {
         // Job management
         cicd.job.agent = cicd.config.agent.k8
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
-          cicd.job.enabled = 0               // Disable staged
-          cicd.config.agent.k8.name = 'base' // Consume as minimal resources as possible.
+          cicd.job.enabled = 0           // Disable staged
+          cicd.job.agent.name = 'base'   // Consume as minimal resources as possible.
         }
 
-        // Kubernetes agent definition
-        // k8sAgent(name: 'base+jenkins_builder+s_micro', label: 'jnlp', cloud: 'kubernetes')
 
         log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
+
+        // Kubernetes agent definition
+        cicd.job.agent.k8sagentConfig = k8sAgent(cicd.job.agent)
       }
   }
   return [cicd, log]

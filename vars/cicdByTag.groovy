@@ -21,7 +21,8 @@ def call() {
         echo "master - Stage: Initialize CICD"
         checkout scm
 
-        // Merge config files (TODO: can be moved out of "node" when workDirectory would be knwon)
+        // Merge config files
+        // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
         cicdApp = readYaml file: 'config/AppConfig.yaml'
         cicd = mapMerge.merge(cicdGlobal, cicdApp)
 
@@ -33,16 +34,22 @@ def call() {
         log = new Logger(this)
 
         // Enhance cicd config (object) with git info, incl "trigger by tag" info
+        // Note: if possible, could be moved out of "node" when TAG_NAME/CHANGE_ID would be known beforehand
         def gitInfoByTag = new GitInfoByTag(this)
         cicd = gitInfoByTag.info(cicd, scm)
 
         // Job management
+        cicd.job.agent = cicd.config.agent.k8
         if (env.BUILD_NUMBER > cicd.job.throttle) {
-          cicd.job.enabled = 0
+          cicd.job.enabled = 0               // Disable staged
+          cicd.config.agent.k8.name = 'base' // Consume as minimal resources as possible.
         }
 
-        log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
-        log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
+        // Kubernetes agent definition
+        // k8sAgent(name: 'base+jenkins_builder+s_micro', label: 'jnlp', cloud: 'kubernetes')
+
+        log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
+        log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
   }
   return [cicd, log]

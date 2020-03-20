@@ -83,7 +83,7 @@ class GitInfoByTag {
               tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
-              cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
+              cicd.job.environment = cicd.config.environments[cicd.config.build.buildEnvironment]
             } else {
               log.error("Tag: " + tag.tagType + " tag not valid - bad appName pattern")
                           }
@@ -98,7 +98,7 @@ class GitInfoByTag {
             tag.versionId = (versionKey == GitTags.versionTag) ? partTwo : git.gitHashShort
 
             // Used environment mapping
-            cicd.job.environment = cicd.deploy[cicd.build.buildEnvironment]
+            cicd.job.environment = cicd.config.environments[cicd.config.build.buildEnvironment]
           } else {
             log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                       }
@@ -109,7 +109,7 @@ class GitInfoByTag {
           log.info("Tag:" + tag.tagType)
                     if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
             git.envKey = partTwo
-            if (cicd.deploy.containsKey(git.envKey)) {
+            if (cicd.config.environments.containsKey(git.envKey)) {
               cicd.job.enabled = 1
               cicd.job.buildEnabled = 1
               cicd.job.deployEnabled = 1
@@ -118,7 +118,7 @@ class GitInfoByTag {
               tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
-              cicd.job.environment = cicd.deploy[git.envKey]
+              cicd.job.environment = cicd.config.environments[git.envKey]
             } else {
               log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                           }
@@ -138,15 +138,15 @@ class GitInfoByTag {
     
     } else if (git.triggerType == "pullRequest") { 
       cicd.job.enabled = 1
-      cicd.job.buildEnabled = cicd.pr.buildEnabled
-      cicd.job.deployEnabled = cicd.pr.deployEnabled
+      cicd.job.buildEnabled = cicd.config.pr.buildEnabled
+      cicd.job.deployEnabled = cicd.config.pr.deployEnabled
       log.info("pullRequest")
       
       // Set version
       tag.versionId = git.gitHashShort
 
       // Used environment mapping
-      cicd.job.environment = cicd.deploy[cicd.pr.buildEnvironment]
+      cicd.job.environment = cicd.config.environments[cicd.config.pr.buildEnvironment]
       // pullRequest
 
     } else { 

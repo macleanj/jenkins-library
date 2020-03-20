@@ -156,8 +156,8 @@ class GitInfoByTag {
     // END VALIDATION
 
     // Merge <env> with generic
-    def envGeneric = MapUtils.deepCopy(cicd.config.environments.generic)
-    def envSpecific = MapUtils.deepCopy(cicd.job.environment)
+    def Map envGeneric = MapUtils.deepCopy(cicd.config.environments.generic)
+    def Map envSpecific = MapUtils.deepCopy(cicd.job.environment)
 
     log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))

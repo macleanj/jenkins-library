@@ -4,7 +4,7 @@ import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.GitUtils
 import com.cicd.jenkins.git.GitTags
-import com.cicd.jenkins.utils.maps.MapMerge
+import com.cicd.jenkins.utils.maps.MapUtils
 import static groovy.json.JsonOutput.*
 
 /*
@@ -156,8 +156,9 @@ class GitInfoByTag {
     // END VALIDATION
 
     // Merge <env> with generic
-    def Map envGeneric = cicd.config.environments.generic
-    def Map envSpecific = cicd.job.environment
+    def envGeneric = MapUtils.deepCopy(cicd.config.environments.generic)
+    def envSpecific = MapUtils.deepCopy(cicd.job.environment)
+
     log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
     cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)

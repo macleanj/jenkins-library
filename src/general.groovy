@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-// Testing everything related to regular expressions
+import com.cicd.jenkins.utils.maps.MapUtils
 import static groovy.json.JsonOutput.*
 
 // Testing clone with and without reference
@@ -15,12 +15,19 @@ if (t1 == 1) {
   // cicd.job.agent.name = 'base'
 
   // Individual copy of keys will create a real copy (some kind of work-around)
-  cicd.job.agent.name = cicd.config.agent.k8.name
-  cicd.job.agent.label = cicd.config.agent.k8.label
-  cicd.job.agent.cloud = cicd.config.agent.k8.cloud
-  cicd.job.agent.name = 'base'
+  // cicd.job.agent.name = cicd.config.agent.k8.name
+  // cicd.job.agent.label = cicd.config.agent.k8.label
+  // cicd.job.agent.cloud = cicd.config.agent.k8.cloud
+  // cicd.job.agent.name = 'base'
   
-  println "cicd: " + prettyPrint(toJson(cicd))
+  // Cloning
+  // cicd init above
+  def cicdCopy = MapUtils.deepCopy(cicd)
+  cicdCopy.config.agent.k8.name = 'base'
+
+
+  println "cicd: \n" + prettyPrint(toJson(cicd))
+  println "cicdCopy: \n" + prettyPrint(toJson(cicdCopy))
 }
 
 

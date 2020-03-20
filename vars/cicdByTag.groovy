@@ -1,6 +1,7 @@
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapMerge
+import com.cicd.jenkins.utils.maps.MapUtils
 import com.cicd.jenkins.git.GitInfoByTag
 import static groovy.json.JsonOutput.*
 
@@ -24,7 +25,7 @@ def call() {
         // Merge config files
         // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
         cicdApp = readYaml file: 'config/AppConfig.yaml'
-        cicd = mapMerge.merge(cicdGlobal, cicdApp)
+        cicd = MapUtils.merge(cicdGlobal, cicdApp)
 
         // Initialize logger
         // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
@@ -43,7 +44,6 @@ def call() {
           cicd.job.enabled = 0           // Disable staged
           cicd.job.agent.name = 'base'   // Consume as minimal resources as possible.
         }
-
 
         log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))

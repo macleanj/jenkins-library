@@ -1,5 +1,5 @@
 /**
- * Source: https://github.com/wcm-io-devops/jenkins-pipeline-library
+ * Source: https://github.com/wcm-io-devops/jenkins-pipeline-library/blob/master/docs/logging.md
  */
 package com.cicd.jenkins.utils.logging
 

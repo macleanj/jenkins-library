@@ -18,7 +18,7 @@ def call() {
   def cicdApp
   node ('master') {
       stage('Initialize CICD (Library)') {
-        log.all("master - Stage: Initialize CICD")
+        log.info("master - Stage: Initialize CICD")
         checkout scm
 
         // Merge config files
@@ -47,8 +47,8 @@ def call() {
         // Kubernetes agent definition
         cicd.job.environment.agent.k8.yaml = k8sAgent(cicd.job.environment.agent.k8).yaml
 
-        log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
-        log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
+        log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
+        log.trace("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
   }
   return [cicd, log]

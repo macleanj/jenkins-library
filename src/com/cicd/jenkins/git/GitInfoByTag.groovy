@@ -4,6 +4,7 @@ import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.git.GitUtils
 import com.cicd.jenkins.git.GitTags
+import com.cicd.jenkins.utils.maps.MapMerge
 import static groovy.json.JsonOutput.*
 
 /*
@@ -153,6 +154,17 @@ class GitInfoByTag {
       log.error("Unknown trigger")
           }
     // END VALIDATION
+
+    // Merge <env> with generic
+    def envGeneric = cicd.config.environment.generic
+    def envSpecific = cicd.job.environment
+    cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
+
+    // Copy of used agent
+    cicd.job.agent = [:]
+    cicd.job.agent.name = cicd.config.agent.k8.name
+    cicd.job.agent.label = cicd.config.agent.k8.label
+    cicd.job.agent.cloud = cicd.config.agent.k8.cloud
 
     cicd.git = git
     cicd.tag = tag

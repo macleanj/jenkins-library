@@ -39,7 +39,11 @@ def call() {
         cicd = gitInfoByTag.info(cicd, scm)
 
         // Job management
-        cicd.job.agent = cicd.config.agent.k8
+        cicd.job.agent = [:]
+        cicd.job.agent.name = cicd.config.agent.k8.name
+        cicd.job.agent.label = cicd.config.agent.k8.label
+        cicd.job.agent.cloud = cicd.config.agent.k8.cloud
+        // cicd.job.agent = cicd.config.agent.k8
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0           // Disable staged
           cicd.job.agent.name = 'base-disabled'   // Consume as minimal resources as possible.

@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import com.cicd.jenkins.utils.yaml.yamlMerge
+import com.cicd.jenkins.utils.yaml.YamlMerge
 
 def call(Map opts = [:]) {
   // name is in a format of a+b+c, so the content will be added together from resource
@@ -26,7 +26,7 @@ def call(Map opts = [:]) {
     templates.add(template)
   }
 
-  def myyaml = new MyYaml()
+  def myyaml = new YamlMerge()
   def final_template = myyaml.merge(templates)
 
   ret['cloud'] = cloud

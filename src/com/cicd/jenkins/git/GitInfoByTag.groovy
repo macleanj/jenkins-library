@@ -162,16 +162,11 @@ class GitInfoByTag {
     log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
     log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
     def mapUtils = new MapUtils()
-    def tempEnv = mapUtils.merge(envGeneric, envSpecific)
-    log.debug("Library: envSpecific\n" + prettyPrint(toJson(tempEnv)))
-    // cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
-    // log.debug("Library: envSpecific\n" + prettyPrint(toJson(cicd.job.environment)))
+    cicd.job.environment = mapUtils.merge(envGeneric, envSpecific)
+    log.debug("Library: merged\n" + prettyPrint(toJson(cicd)))
 
     // Copy of used agent
-    cicd.job.agent = [:]
-    cicd.job.agent.name = cicd.config.agent.k8.name
-    cicd.job.agent.label = cicd.config.agent.k8.label
-    cicd.job.agent.cloud = cicd.config.agent.k8.cloud
+    def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
 
     cicd.git = git
     cicd.tag = tag

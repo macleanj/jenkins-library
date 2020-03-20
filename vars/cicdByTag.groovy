@@ -18,7 +18,7 @@ def call() {
   def cicdApp
   node ('master') {
       stage('Initialize CICD (Library)') {
-        log.info("master - Stage: Initialize CICD")
+        echo "master - Stage: Initialize CICD"
         checkout scm
 
         // Merge config files

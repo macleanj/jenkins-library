@@ -54,7 +54,7 @@ def call() {
         log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
 
         // Kubernetes agent definition
-        cicd.job.environment.agent.k8.config = k8sAgent(cicd.job.environment.agent.k8.name)
+        cicd.job.environment.agent.k8.config = k8sAgent(cicd.job.environment.agent.k8)
       }
   }
   return [cicd, log]

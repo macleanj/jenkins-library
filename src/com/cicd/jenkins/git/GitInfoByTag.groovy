@@ -158,6 +158,8 @@ class GitInfoByTag {
     // Merge <env> with generic
     def envGeneric = cicd.config.environments.generic
     def envSpecific = cicd.job.environment
+    log.debug("Library: envGeneric\n" + prettyPrint(toJson(envGeneric)))
+    log.debug("Library: envSpecific\n" + prettyPrint(toJson(envSpecific)))
     cicd.job.environment = mapMerge.merge(envGeneric, envSpecific)
 
     // Copy of used agent

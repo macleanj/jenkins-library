@@ -36,6 +36,11 @@ def call() {
         def gitInfoByTag = new GitInfoByTag(this)
         cicd = gitInfoByTag.info(cicd, scm)
 
+        // Job management
+        if (env.BUILD_NUMBER > cicd.job.throttle) {
+          cicd.job.enabled = 0
+        }
+
         log.debug("CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }

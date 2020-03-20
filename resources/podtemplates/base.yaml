@@ -1,0 +1,21 @@
+metadata:
+  name: jnlp
+  labels:
+    name: jnlp
+spec:
+  containers:
+  - name: jnlp
+    image: jmaclean/jenkins-jnlp-slave:3.40-1
+    imagePullPolicy: Always
+    workingDir: /home/jenkins/agent
+    securityContext:
+      runAsUser: 1000
+    resources:
+      limits:
+        memory: 1Gi
+        cpu: 1
+        ephemeral-storage: 2Gi
+      requests:
+        memory: 128Mi
+        cpu: 250m
+        ephemeral-storage: 1Gi

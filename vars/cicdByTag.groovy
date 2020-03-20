@@ -1,6 +1,5 @@
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
-import com.cicd.jenkins.utils.maps.MapMerge
 import com.cicd.jenkins.utils.maps.MapUtils
 import com.cicd.jenkins.git.GitInfoByTag
 import static groovy.json.JsonOutput.*
@@ -19,7 +18,7 @@ def call() {
   def cicdApp
   node ('master') {
       stage('Initialize CICD (Library)') {
-        echo "master - Stage: Initialize CICD"
+        log.all("master - Stage: Initialize CICD")
         checkout scm
 
         // Merge config files
@@ -41,20 +40,15 @@ def call() {
 
         // Job management
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
-          cicd.job.enabled = 0           // Disable staged
-
-          // def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
+          cicd.job.enabled = 0                          // Disable staged
           cicd.job.environment.agent.k8.name = 'base'   // Consume as minimal resources as possible.
         }
 
-        // // Copy of used agent
-        // def Map orgAgent = MapUtils.deepCopy(cicd.job.agent)
+        // Kubernetes agent definition
+        cicd.job.environment.agent.k8.yaml = k8sAgent(cicd.job.environment.agent.k8).yaml
 
         log.debug("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.debug("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
-
-        // Kubernetes agent definition
-        cicd.job.environment.agent.k8.config = k8sAgent(cicd.job.environment.agent.k8)
       }
   }
   return [cicd, log]

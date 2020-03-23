@@ -14,3 +14,12 @@ spec:
     command:
     - cat
     tty: true
+    volumeMounts:
+    - name: home-volume-builder
+      mountPath: /home/jenkins/agent
+    env:
+    - name: HOME
+      value: /home/jenkins/agent
+  volumes:
+  - name: home-volume-builder
+    emptyDir: {}

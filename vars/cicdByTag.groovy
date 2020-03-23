@@ -42,6 +42,13 @@ def call() {
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0                          // Disable staged
           cicd.job.environment.agent.name = 'base'   // Consume as minimal resources as possible.
+          log.warning("""
+#####################################################################################
+#
+# Pipeline disabled by job throttle !!!
+#
+#####################################################################################
+"""
         }
 
         // Kubernetes agent definition

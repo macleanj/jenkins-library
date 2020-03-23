@@ -5,8 +5,8 @@ spec:
       requests:
         memory: 500Mi
         cpu: 250m
-        ephemeral-storage: 1Gi
+        # ephemeral-storage: 1Gi
       limits:
         memory: 2Gi
         cpu: 1
-        ephemeral-storage: 2Gi
+        # ephemeral-storage: 2Gi

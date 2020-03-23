@@ -8,8 +8,8 @@ spec:
     image: jmaclean/jenkins-jnlp-slave:3.40-1
     imagePullPolicy: Always
     workingDir: /home/jenkins/agent
-    securityContext:
-      runAsUser: 1000
+    # securityContext:
+    #   runAsUser: 1000
     resources:
       limits:
         memory: 1Gi

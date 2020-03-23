@@ -38,7 +38,7 @@ public getGithubByTag(String tagName, Object scm) {
   requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/refs/tags/${tagName}"
   try {
     getResponseTagCommit = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'github.cicd.main.api.credentials',
+                                  authentication: 'github.main.cicd.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"Tag in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
@@ -49,7 +49,7 @@ public getGithubByTag(String tagName, Object scm) {
   requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/tags/${tagCommit}"
   try {
     getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'github.cicd.main.api.credentials',
+                                  authentication: 'github.main.cicd.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"Tag in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
@@ -77,7 +77,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   requestedUrl = "https://api.github.com/users/${accountName}"
   try {
     getResponseUser = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'github.cicd.main.api.credentials',
+                                  authentication: 'github.main.cicd.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"User in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
@@ -87,7 +87,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}"
   try {
     getResponseRepo = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'github.cicd.main.api.credentials',
+                                  authentication: 'github.main.cicd.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"Repo in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"
@@ -97,7 +97,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/commits/${gitCommit}"
   try {
     getResponseCommit = httpRequest(acceptType: 'APPLICATION_JSON',
-                                  authentication: 'github.cicd.main.api.credentials',
+                                  authentication: 'github.main.cicd.api.credentials',
                                   url: requestedUrl)
   } catch (IllegalStateException e) {
     echo"Commit in GitHub could not be found at URL: ${requestedUrl}. Error: ${e.message}"

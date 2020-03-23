@@ -41,7 +41,7 @@ def call() {
         // Job management
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0                          // Disable staged
-          cicd.job.environment.agent.name = 'base'   // Consume as minimal resources as possible.
+          cicd.job.environment.agent.name = 'base'      // Consume as minimal resources as possible.
           log.warn("#####################################################################################")
           log.warn("#")
           log.warn("# Pipeline disabled by job throttle !!!")
@@ -50,6 +50,7 @@ def call() {
         }
 
         // Kubernetes agent definition
+        cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
         cicd.job.environment.agent.yaml = k8sAgent(cicd.job.environment.agent).yaml
 
         log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))

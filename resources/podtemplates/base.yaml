@@ -20,11 +20,11 @@ spec:
         cpu: 250m
         ephemeral-storage: 1Gi
     volumeMounts:
-    - name: home-volume-agent
-      mountPath: /home/jenkins/agent
+    - name: home-volume
+      mountPath: /home/jenkins
     env:
     - name: HOME
-      value: /home/jenkins/agent
+      value: /home/jenkins
   volumes:
-  - name: home-volume-agent
+  - name: home-volume
     emptyDir: {}

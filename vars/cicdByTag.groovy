@@ -41,11 +41,11 @@ def call() {
         // Job management
         if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
           cicd.job.enabled = 0                          // Disable staged
-          cicd.job.environment.agent.k8.name = 'base'   // Consume as minimal resources as possible.
+          cicd.job.environment.agent.name = 'base'   // Consume as minimal resources as possible.
         }
 
         // Kubernetes agent definition
-        cicd.job.environment.agent.k8.yaml = k8sAgent(cicd.job.environment.agent.k8).yaml
+        cicd.job.environment.agent.yaml = k8sAgent(cicd.job.environment.agent).yaml
 
         log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
         log.trace("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))

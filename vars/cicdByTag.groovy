@@ -15,47 +15,46 @@ def call() {
 
   // Getting application specific config
   // App config from built repo
-  def cicdApp
   node ('master') {
-      stage('Initialize CICD (Library)') {
-        echo "master - Stage: Initialize CICD"
-        checkout scm
+    stage('Initialize CICD (Library)') {
+      echo "master - Stage: Initialize CICD"
+      checkout scm
 
-        // Merge config files
-        // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
-        cicdApp = readYaml file: 'config/AppConfig.yaml'
-        cicd = mapUtils.merge(cicdGlobal, cicdApp)
+      // Merge config files
+      // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
+      def cicdApp = readYaml file: 'config/AppConfig.yaml'
+      cicd = mapUtils.merge(cicdGlobal, cicdApp)
 
-        // Initialize logger
-        // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
-        // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
-        env.CICD_LOGLEVEL = cicd.loglevel
-        Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
-        log = new Logger(this)
+      // Initialize logger
+      // Pass it to env/'this' to be able to enable global debug (both in classes and containers)
+      // MIND: env.<Integer>.getClass() will ALAWAYS by a String!!
+      env.CICD_LOGLEVEL = cicd.loglevel
+      Logger.init(this, [ logLevel: LogLevel[env.CICD_LOGLEVEL] ])
+      log = new Logger(this)
 
-        // Enhance cicd config (object) with git info, incl "trigger by tag" info
-        // Note: if possible, could be moved out of "node" when TAG_NAME/CHANGE_ID would be known beforehand
-        def gitInfoByTag = new GitInfoByTag(this)
-        cicd = gitInfoByTag.info(cicd, scm)
+      // Enhance cicd config (object) with git info, incl "trigger by tag" info
+      // Note: if possible, could be moved out of "node" when TAG_NAME/CHANGE_ID would be known beforehand
+      def gitInfoByTag = new GitInfoByTag(this)
+      cicd = gitInfoByTag.info(cicd, scm)
 
-        // Job management
-        if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
-          cicd.job.enabled = 0                          // Disable staged
-          cicd.job.environment.agent.name = 'base'      // Consume as minimal resources as possible.
-          log.warn("#####################################################################################")
-          log.warn("#")
-          log.warn("# Pipeline disabled by job throttle !!!")
-          log.warn("#")
-          log.warn("#####################################################################################")
-        }
-
-        // Kubernetes agent definition
-        cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
-        cicd.job.environment.agent.yaml = k8sAgent(cicd.job.environment.agent).yaml
-
-        log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
-        log.trace("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
+      // Job management
+      if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
+        cicd.job.enabled = 0                          // Disable staged
+        cicd.job.environment.agent.name = 'base'      // Consume as minimal resources as possible.
+        log.warn("#####################################################################################")
+        log.warn("#")
+        log.warn("# Pipeline disabled by job throttle !!!")
+        log.warn("#")
+        log.warn("#####################################################################################")
       }
+
+      // Kubernetes agent definition
+      cicd.job.environment.agent = k8sAgent(cicd.job.environment.agent)
+      cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
+
+      log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))
+      log.trace("Library: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
+    }
   }
   return [cicd, log]
 }

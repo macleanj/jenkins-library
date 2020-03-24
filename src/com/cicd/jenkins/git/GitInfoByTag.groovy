@@ -83,6 +83,9 @@ class GitInfoByTag {
               cicd.job.deployEnabled = 0
               tag.appName = partTwo.toLowerCase().replaceAll("[_]", "-")
 
+              // Tag appName is leading over cicd.appName
+              cicd.appName = tag.appName
+
               // Set version
               tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 

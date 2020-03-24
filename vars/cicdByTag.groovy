@@ -16,7 +16,7 @@ def call() {
   // Getting application specific config
   // App config from built repo
   node ('master') {
-    stage('Initialize CICD (Library)') {
+    stage('cicdByTag (Library)') {
       echo "master - Stage: Initialize CICD"
       checkout scm
 
@@ -34,8 +34,9 @@ def call() {
 
       // Enhance cicd config (object) with git info, incl "trigger by tag" info
       // Note: if possible, could be moved out of "node" when TAG_NAME/CHANGE_ID would be known beforehand
+      this.cicd = cicd
       def gitInfoByTag = new GitInfoByTag(this)
-      cicd = gitInfoByTag.info(cicd, scm)
+      cicd = gitInfoByTag.info(scm)
 
       // Job management
       if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {

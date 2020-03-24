@@ -28,13 +28,14 @@ class GitInfoByTag {
 
     // Instantiate methods
     Logger.init(this.context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
+    this.cicd = context.cicd
     this.log = new Logger(this)
     this.gitUtils = new GitUtils()
     this.mapUtils = new MapUtils()
   }
 
   // --- Method Logic
-  def info(def Map cicd, def Object scm) {
+  def info(scm) {
     def triggerType
     def git = [:]
     def tag = [:]

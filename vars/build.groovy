@@ -1,4 +1,4 @@
-def call(Map context, Map pipelineParams) {
+def call(context) {
   def cicd = context.cicd
   def log = context.log
 

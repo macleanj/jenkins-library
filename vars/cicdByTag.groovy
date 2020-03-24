@@ -49,6 +49,7 @@ def call() {
       }
 
       // Kubernetes agent definition
+      cicd.job.environment.agent.name = cicd.job.environment.container.builderAgentBase + "+" + cicd.job.environment.agent.name
       cicd.job.environment.agent = k8sAgent(cicd.job.environment.agent)
       cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
 

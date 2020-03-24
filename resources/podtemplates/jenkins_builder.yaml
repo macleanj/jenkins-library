@@ -9,17 +9,17 @@ spec:
     imagePullPolicy: Always
     workingDir: /home/jenkins/agent
     securityContext:
-      # runAsUser: 1000
+      runAsUser: 1000
       rawProc: true
     command:
     - cat
     tty: true
-    volumeMounts:
-    - name: home-volume
-      mountPath: /home/jenkins
-    env:
-    - name: HOME
-      value: /home/jenkins
-  volumes:
-  - name: home-volume
-    emptyDir: {}
+  #   volumeMounts:
+  #   - name: home-volume
+  #     mountPath: /home/jenkins
+  #   env:
+  #   - name: HOME
+  #     value: /home/jenkins
+  # volumes:
+  # - name: home-volume
+  #   emptyDir: {}

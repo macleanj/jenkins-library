@@ -42,26 +42,6 @@ class MapUtils implements Serializable {
     }
 
     /**
-     * Merge two maps with the second one has precedence
-     * @param base First map
-     * @param overlay Second map, takes precedence
-     * @return The merged map
-     */
-    // static Map merge(Map base, Map overlay) {
-
-    //     Map result = [:]
-
-    //     base = base ?: [:]
-
-    //     result.putAll(base)
-
-    //     overlay.each { key, value ->
-    //         result[key] = isMap(value) ? merge(base[key], value) : value
-    //     }
-    //     return result
-    // }
-
-    /**
      * @param m The map to which the changed denoted by closure <code>strategy</code>
      *        should be applied.
      *        The strategy is also applied to all sub-maps contained as values

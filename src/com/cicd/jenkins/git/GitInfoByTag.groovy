@@ -18,6 +18,7 @@ import static groovy.json.JsonOutput.*
 class GitInfoByTag {
   // --- Resources
   def context
+  def cicd
   def log
   def gitUtils
   def mapUtils

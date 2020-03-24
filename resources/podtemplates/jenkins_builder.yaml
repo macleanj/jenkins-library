@@ -6,7 +6,7 @@ spec:
   containers:
   - name: jenkins-builder
     image: jmaclean/jenkins-builder:0.5.7
-    imagePullPolicy: Always
+    # imagePullPolicy: Always
     workingDir: /home/jenkins/agent
     securityContext:
       runAsUser: 1000

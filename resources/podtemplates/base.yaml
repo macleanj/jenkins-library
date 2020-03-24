@@ -6,7 +6,7 @@ spec:
   containers:
   - name: jnlp
     image: jmaclean/jenkins-jnlp-slave:3.40-1
-    imagePullPolicy: Always
+    # imagePullPolicy: Always
     workingDir: /home/jenkins/agent
     securityContext:
       runAsUser: 1000

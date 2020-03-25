@@ -5,4 +5,4 @@ spec:
       requests:
         ephemeral-storage: 1Gi
       limits:
-        ephemeral-storage: 2Gi
+        ephemeral-storage: 4Gi

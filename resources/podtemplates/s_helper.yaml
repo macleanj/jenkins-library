@@ -11,4 +11,4 @@ spec:
         memory: 2Gi
         cpu: 2
         # ephemeral-storage: 1Gi
-        ephemeral-storage: 3Gi
+        ephemeral-storage: 4Gi

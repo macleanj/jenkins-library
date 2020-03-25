@@ -75,9 +75,9 @@ class GitInfoByTag {
         if (tagTypeKey == GitTags.buildTag) {
           tag.tagType="build"
           log.info("Tag:" + tag.tagType)
-                    if (partThree ==~ /[0-9.]+/) {
+          if (partThree ==~ /[0-9.]+/) {
             log.info("Tag: Build Multi")
-                        if (partTwo ==~ /[a-z_]+/) {
+            if (partTwo ==~ /[a-z_0-9.]+/) {
               cicd.job.enabled = 1
               cicd.job.buildEnabled = 1
               cicd.job.deployEnabled = 0
@@ -114,7 +114,7 @@ class GitInfoByTag {
         } else if (tagTypeKey == GitTags.deployTag) {
           tag.tagType="deployment"
           log.info("Tag:" + tag.tagType)
-                    if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
+          if (partTwo ==~ /[a-z_]+/ && partThree ==~ /^[0-9.]+$/) {
             git.envKey = partTwo
             if (cicd.config.environments.containsKey(git.envKey)) {
               cicd.job.enabled = 1
@@ -138,8 +138,8 @@ class GitInfoByTag {
         }
 
       } else {
-          tag.tagType="overall"
-          log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
+        tag.tagType="overall"
+        log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
       }
       // Tag
     

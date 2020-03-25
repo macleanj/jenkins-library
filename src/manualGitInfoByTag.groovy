@@ -51,6 +51,7 @@ git.gitHashShort = git.gitHash ? git.gitHash.take(6) : ''
 // git.tagName = "bv-my_app_from_builders-1.86"
 // git.tagName = "dh-prod-1.86"
 // git.tagName = "dv-prod-1.86"
+git.tagName = "bv-node8-1.86"
 
 // Not correct
 // git.tagName = "xv-1.86"
@@ -103,7 +104,7 @@ TriggerByTagConstants.hashTag = "h"
             if (partThree ==~ /[0-9.]+/) {
               // log.info("Tag: Build Multi")
               println "Tag: Build Multi"
-              if (partTwo ==~ /[a-z_]+/) {
+              if (partTwo ==~ /[a-z_0-9.]+/) {
                 cicd.job.enabled = 1
                 cicd.job.buildEnabled = 1
                 cicd.job.deployEnabled = 0
@@ -167,9 +168,9 @@ TriggerByTagConstants.hashTag = "h"
           }
 
         } else {
-            git.tagType="overall"
-            // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
-            println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
+          git.tagType="overall"
+          // log.error("Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern")
+          println "Tag: " + git.tagType + " tag not valid - bad " + git.tagType + " tag pattern"
         }
       // Tag
       

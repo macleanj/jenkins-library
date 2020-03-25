@@ -2,8 +2,9 @@ spec:
   containers:
   - name: jenkins-builder
     resources:
-      limits:
-        memory: 8Gi
       requests:
         memory: 4Gi
         cpu: 2
+      limits:
+        memory: 8Gi
+  

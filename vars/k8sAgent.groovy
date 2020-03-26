@@ -37,7 +37,7 @@ def call(context) {
   for (c in comps) {
     if (fileExists('config/podtemplates/' + c + '.yaml')) {
       // Take application templates
-      template = readYaml file: 'config/podtemplates/' + c + '.yaml'
+      template = readFile('config/podtemplates/' + c + '.yaml')
       log.trace("Agent: Specific template: " + template)
     } else {
       // Take global templates

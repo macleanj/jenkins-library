@@ -30,7 +30,7 @@ def call(Map opts = [:]) {
   def templates = []
   String template
   for (c in comps) {
-    if ('config/podtemplates/' + c + '.yaml'.canRead()) {
+    if (fileExists('config/podtemplates/' + c + '.yaml')) {
       // Take application templates
       template = 'config/podtemplates/' + c + '.yaml'
     } else {

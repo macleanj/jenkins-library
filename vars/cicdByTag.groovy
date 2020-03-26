@@ -52,7 +52,7 @@ def call() {
 
       // Kubernetes agent definition
       cicd.job.environment.agent.name = cicd.job.environment.container.builderAgentBase + "+" + cicd.job.environment.agent.name
-      cicd.job.environment.agent = mapUtils.merge(cicd.job.environment.agent, k8sAgent(this)
+      cicd.job.environment.agent = mapUtils.merge(cicd.job.environment.agent, k8sAgent(this))
       cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
 
       log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))

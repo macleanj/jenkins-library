@@ -13,16 +13,30 @@ def call(Map opts = [:]) {
 
   def comps = name.split('\\+|-').toList()
 
-  // Bug fix. JML
+  // JML: Bug fix.
   // base needs to be explicitly configured
   // if (name != 'base') {
   //   comps = comps.plus(0, 'base')
   // }
 
+  // JML: 
+  // def templates = []
+  // String template
+  // for (c in comps) {
+  //   template = libraryResource 'podtemplates/' + c + '.yaml'
+  //   templates.add(template)
+  // }
+
   def templates = []
   String template
   for (c in comps) {
-    template = libraryResource 'podtemplates/' + c + '.yaml'
+    if ('config/podtemplates/' + c + '.yaml') {
+      // Take application templates
+      template = ('config/podtemplates/' + c + '.yaml'
+    } else {
+      // Take global templates
+      template = k8sAgentGlobalTemplates(c)
+    }
     templates.add(template)
   }
 

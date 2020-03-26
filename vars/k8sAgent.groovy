@@ -30,9 +30,9 @@ def call(Map opts = [:]) {
   def templates = []
   String template
   for (c in comps) {
-    if ('config/podtemplates/' + c + '.yaml') {
+    if (assert 'config/podtemplates/' + c + '.yaml'.exists()) {
       // Take application templates
-      template = ('config/podtemplates/' + c + '.yaml'
+      template = 'config/podtemplates/' + c + '.yaml'
     } else {
       // Take global templates
       template = k8sAgentGlobalTemplates(c)

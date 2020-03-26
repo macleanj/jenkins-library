@@ -5,8 +5,8 @@ import com.cicd.jenkins.utils.logging.Logger
 
 def call(context) {
   Logger.init(context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
-  def cicd = context.cicd
-  def opts = cicd.job.environment.agent
+  def log = new Logger(this)
+  def opts = context.cicd.job.environment.agent
 
   // name is in a format of a+b+c, so the content will be added together from resource
   // example: small+pg we will collect the content from base.yaml, small.yaml, pg.yaml

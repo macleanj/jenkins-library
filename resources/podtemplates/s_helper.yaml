@@ -9,4 +9,4 @@ spec:
       limits:
         memory: 2Gi
         cpu: 2
-        ephemeral-storage: 6Gi
+        ephemeral-storage: 8Gi

@@ -37,6 +37,7 @@ def call() {
       this.cicd = cicd
       def gitInfoByTag = new GitInfoByTag(this)
       cicd = gitInfoByTag.info(scm)
+      this.cicd = cicd
 
       // Job management
       if (env.BUILD_NUMBER.toInteger() > cicd.job.throttle) {
@@ -51,7 +52,7 @@ def call() {
 
       // Kubernetes agent definition
       cicd.job.environment.agent.name = cicd.job.environment.container.builderAgentBase + "+" + cicd.job.environment.agent.name
-      cicd.job.environment.agent = mapUtils.merge(cicd.job.environment.agent, k8sAgent(cicd.job.environment.agent))
+      cicd.job.environment.agent = mapUtils.merge(cicd.job.environment.agent, k8sAgent(this)
       cicd.job.environment.agent.label = cicd.job.environment.agent.label + "-" + cicd.appName
 
       log.trace("Library: CICD Configuration\n" + prettyPrint(toJson(cicd)))

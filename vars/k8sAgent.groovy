@@ -1,10 +1,15 @@
 #!/usr/bin/env groovy
 import com.cicd.jenkins.utils.yaml.YamlMerge
+import com.cicd.jenkins.utils.logging.LogLevel
+import com.cicd.jenkins.utils.logging.Logger
 
-def call(Map opts = [:]) {
+def call(context) {
+  Logger.init(context, [ logLevel: LogLevel[context.env.CICD_LOGLEVEL] ])
+  def cicd = context.cicd
+  def opts = cicd.job.environment.agent
+
   // name is in a format of a+b+c, so the content will be added together from resource
   // example: small+pg we will collect the content from base.yaml, small.yaml, pg.yaml
-
   String name = opts.get('name', 'base')
   String defaultLabel = "${name.replace('+', '_')}-${UUID.randomUUID().toString()}"
   String label = opts.get('label', defaultLabel)
@@ -33,9 +38,11 @@ def call(Map opts = [:]) {
     if (fileExists('config/podtemplates/' + c + '.yaml')) {
       // Take application templates
       template = 'config/podtemplates/' + c + '.yaml'
+      log.trace("Agent: Specific template: " + template)
     } else {
       // Take global templates
       template = k8sAgentGlobalTemplates(c)
+      log.trace("Agent: Generic template: " + template)
     }
     templates.add(template)
   }

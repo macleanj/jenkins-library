@@ -178,11 +178,13 @@ class GitInfoByTag {
     // - Generic
     def Map envGenericEnv = mapUtils.deepCopy(cicd.config.environments.generic)
     def Map envSpecificEnv = mapUtils.deepCopy(cicd.job.environment)
-    def Map envAppGenericEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily].generic)
-    def Map envAppSpecificEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily][envKey])
     cicd.job.environment = mapUtils.merge(envGenericEnv, envSpecificEnv)
-    cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppGenericEnv)
-    cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecificEnv)
+    if (cicd.appFamily) {
+      def Map envAppGenericEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily].generic)
+      def Map envAppSpecificEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily][envKey])
+      cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppGenericEnv)
+      cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecificEnv)
+    }
 
     cicd.git = git
     cicd.tag = tag

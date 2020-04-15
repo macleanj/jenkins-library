@@ -48,19 +48,16 @@ config:
 
     # Specific Environment
     dev:
-      key: 'dev'
       name: 'Development'
       platformName: 'OpenShift Online Sandbox'
       platformOwner: 'company'
       platformNamespace: 'wltp-sandbox'
     test:
-      key: 'test'
       name: 'Test'
       platformName: 'OpenShift Online PROD'
       platformOwner: 'company'
       platformNamespace: 'wltp'
     int:
-      key: 'int'
       name: 'Integration'
       platformName: 'OpenShift on-prem INT (Staging/PreProd)'
       platformOwner: 'client'
@@ -74,7 +71,6 @@ config:
       registrySpace: 'company-insights'
       registryCredentials: 'registry.client.wins.cicd.api.credentials'
     prod:
-      key: 'prod'
       name: 'Production'
       platformName: 'OpenShift on-prem PROD'
       platformOwner: 'client'
@@ -97,13 +93,9 @@ config:
           appNamePrefix: 'wins-'
           appNamePostfix: ''
         dev:
-          key: 'dev'
         test:
-          key: 'test'
         int:
-          key: 'int'
         prod:
-          key: 'prod'
 
       # MaxSA
       maxsa:
@@ -111,11 +103,7 @@ config:
           appNamePrefix: 'maxsa-'
           appNamePostfix: ''
         dev:
-          key: 'dev'
         test:
-          key: 'test'
         int:
-          key: 'int'
         prod:
-          key: 'prod'
         

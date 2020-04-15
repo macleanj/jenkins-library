@@ -45,6 +45,7 @@ class GitInfoByTag {
     def triggerType
     def git = [:]
     def tag = [:]
+    def envKey
     def changeId = context.env.CHANGE_ID ?: ''
     def tagName = context.env.TAG_NAME ?: ''
     
@@ -95,7 +96,8 @@ class GitInfoByTag {
               tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
-              cicd.job.environment = cicd.config.environments[cicd.config.build.buildEnvironment]
+              envKey = cicd.config.build.buildEnvironment
+              cicd.job.environment = cicd.config.environments[envKey]
             } else {
               log.error("Tag: " + tag.tagType + " tag not valid - bad appName pattern")
                           }
@@ -110,7 +112,8 @@ class GitInfoByTag {
             tag.versionId = (versionKey == GitTags.versionTag) ? partTwo : git.gitHashShort
 
             // Used environment mapping
-            cicd.job.environment = cicd.config.environments[cicd.config.build.buildEnvironment]
+            envKey = cicd.config.build.buildEnvironment
+            cicd.job.environment = cicd.config.environments[envKey]
           } else {
             log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                       }
@@ -130,7 +133,8 @@ class GitInfoByTag {
               tag.versionId = (versionKey == GitTags.versionTag) ? partThree : git.gitHashShort
 
               // Used environment mapping
-              cicd.job.environment = cicd.config.environments[git.envKey]
+              envKey = git.envKey
+              cicd.job.environment = cicd.config.environments[envKey]
             } else {
               log.error("Tag: " + tag.tagType + " tag not valid - bad " + tag.tagType + " tag pattern")
                           }
@@ -158,7 +162,8 @@ class GitInfoByTag {
       tag.versionId = git.gitHashShort
 
       // Used environment mapping
-      cicd.job.environment = cicd.config.environments[cicd.config.pr.buildEnvironment]
+      envKey = cicd.config.pr.buildEnvironment
+      cicd.job.environment = cicd.config.environments[envKey]
       // pullRequest
 
     } else { 
@@ -174,7 +179,7 @@ class GitInfoByTag {
     def Map envGenericEnv = mapUtils.deepCopy(cicd.config.environments.generic)
     def Map envSpecificEnv = mapUtils.deepCopy(cicd.job.environment)
     def Map envAppGenericEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily].generic)
-    def Map envAppSpecificEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily][cicd.job.environment.key])
+    def Map envAppSpecificEnv = mapUtils.deepCopy(cicd.config.environments.app[cicd.appFamily][envKey])
     cicd.job.environment = mapUtils.merge(envGenericEnv, envSpecificEnv)
     cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppGenericEnv)
     cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecificEnv)

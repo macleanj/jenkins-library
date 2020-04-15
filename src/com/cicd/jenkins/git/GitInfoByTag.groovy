@@ -158,13 +158,21 @@ class GitInfoByTag {
 
     } else { 
       log.error("Unknown trigger")
-          }
+    }
     // END VALIDATION
 
-    // Merge specific with generic environment
-    def Map envGeneric = mapUtils.deepCopy(cicd.config.environments.generic)
-    def Map envSpecific = mapUtils.deepCopy(cicd.job.environment)
+    // Merge environment configurations. Leading from top to down
+    // - AppSpecific
+    // - AppGeneric
+    // - Specific
+    // - Generic
+    def Map envGenericEnv = mapUtils.deepCopy(cicd.config.environments.generic)
+    def Map envSpecificEnv = mapUtils.deepCopy(cicd.job.environment)
+    def Map envAppGenericEnv = mapUtils.deepCopy(cicd.job.environments[cicd.appFamily].generic)
+    def Map envAppSpecificEnv = mapUtils.deepCopy(cicd.job.environments[cicd.appFamily][cicd.job.environment.key])
     cicd.job.environment = mapUtils.merge(envGeneric, envSpecific)
+    cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppGenericEnv)
+    cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecificEnv)
 
     cicd.git = git
     cicd.tag = tag

@@ -1,3 +1,7 @@
+/*
+ * Loading the local build and deploy configuration
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
 def call(project, service) {
   def debug = 0
 

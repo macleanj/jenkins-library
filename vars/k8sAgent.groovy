@@ -1,4 +1,10 @@
 #!/usr/bin/env groovy
+
+/*
+ * Kubernetes agent definition based on file-reference. The yml files referenced will merged to build one single agent yaml file.
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 import com.cicd.jenkins.utils.yaml.YamlMerge
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
@@ -17,20 +23,6 @@ def call(context) {
   def ret = [:]
 
   def comps = name.split('\\+|-').toList()
-
-  // JML: Bug fix.
-  // base needs to be explicitly configured
-  // if (name != 'base') {
-  //   comps = comps.plus(0, 'base')
-  // }
-
-  // JML: 
-  // def templates = []
-  // String template
-  // for (c in comps) {
-  //   template = libraryResource 'podtemplates/' + c + '.yaml'
-  //   templates.add(template)
-  // }
 
   def templates = []
   String template

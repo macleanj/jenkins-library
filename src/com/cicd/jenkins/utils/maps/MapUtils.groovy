@@ -1,5 +1,6 @@
-/**
- * Source: https://github.com/SAP/jenkins-library/blob/master/src/com/sap/piper/MapUtils.groovy
+/*
+ * Map and Object utilities
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
  */
 package com.cicd.jenkins.utils.maps
 

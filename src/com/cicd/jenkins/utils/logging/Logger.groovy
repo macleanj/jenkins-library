@@ -1,5 +1,6 @@
-/**
- * Source: https://github.com/wcm-io-devops/jenkins-pipeline-library/blob/master/docs/logging.md
+/*
+ * Logging class for integral logging based on logging level
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
  */
 package com.cicd.jenkins.utils.logging
 

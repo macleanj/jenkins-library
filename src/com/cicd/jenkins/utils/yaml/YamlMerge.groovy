@@ -1,3 +1,8 @@
+/*
+ * Yaml utilities
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 package com.cicd.jenkins.utils.yaml
 
 @Grab('org.yaml:snakeyaml:1.25')

@@ -2,7 +2,8 @@
 
 /*
  * Script to test and develop libraries
- **/
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
 
 // Definitions
 def context  =  [:]

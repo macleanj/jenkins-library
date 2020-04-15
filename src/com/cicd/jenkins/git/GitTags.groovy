@@ -1,3 +1,8 @@
+/*
+ * Determination of tag convention used for GitByTag
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 package com.cicd.jenkins.git
 
 class GitTags {

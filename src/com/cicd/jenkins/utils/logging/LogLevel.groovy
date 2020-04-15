@@ -6,9 +6,11 @@ package com.cicd.jenkins.utils.logging
 import com.cloudbees.groovy.cps.NonCPS
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 
-/**
+/*
  * Enumeration for log levels
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
  */
+
 @SuppressFBWarnings('ME_ENUM_FIELD_SETTER')
 enum LogLevel implements Serializable {
 

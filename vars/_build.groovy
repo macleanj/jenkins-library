@@ -1,3 +1,7 @@
+/*
+ * Function to build images based on choosen build method
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
 def call(context, user, pass) {
   def cicd = context.cicd
   def log = context.log

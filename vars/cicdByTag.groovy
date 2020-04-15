@@ -1,3 +1,7 @@
+/*
+ * Entrypoint for pipelines using the TriggerByTag workflow
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
 import com.cicd.jenkins.utils.logging.LogLevel
 import com.cicd.jenkins.utils.logging.Logger
 import com.cicd.jenkins.utils.maps.MapUtils

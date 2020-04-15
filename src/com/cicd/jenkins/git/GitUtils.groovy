@@ -1,3 +1,8 @@
+/*
+ * GIT utilities
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 package com.cicd.jenkins.git
 
 import groovy.json.JsonSlurper

@@ -1,5 +1,10 @@
 #!/usr/bin/env groovy
-// Testing everything related to regular expressions
+
+/*
+ * Testing everything related to regular expressions
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 import static groovy.json.JsonOutput.*
 import groovy.json.JsonSlurper
 import groovy.yaml.YamlSlurper

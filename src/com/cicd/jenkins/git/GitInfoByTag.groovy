@@ -1,3 +1,8 @@
+/*
+ * Determination of value from GIT tag
+ * Jerome Mac Lean - CrossLogic Consulting <jerome@crosslogic-consulting.com>
+ */
+
 package com.cicd.jenkins.git
 
 import com.cicd.jenkins.utils.logging.LogLevel

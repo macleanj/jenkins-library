@@ -173,6 +173,7 @@ class GitInfoByTag {
 
     // Merge environment configurations. Leading from top to down
     // - AppSpecific
+    // - AppGeneric
     // - AppFamilySpecific
     // - AppFamilyGeneric
     // - GlobalSpecific
@@ -186,8 +187,14 @@ class GitInfoByTag {
       cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppFamilyGeneric)
       cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppFamilySpecific)
     }
-    def Map envAppSpecific = mapUtils.deepCopy(cicd.config.environments.app)
-    cicd.job.environment = mapUtils.merge(cicd.job, envAppSpecific.config)
+    if (cicd.config.environments.app.config.environments.generic) {
+      def Map envAppGeneric = mapUtils.deepCopy(cicd.config.environments.app.config.environments.generic)
+      cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppGeneric)
+    }
+    if (cicd.config.environments.app.config.environments[envKey]) {
+      def Map envAppSpecific = mapUtils.deepCopy(cicd.config.environments.app.config.environments[envKey])
+      cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecific)
+    }
 
     cicd.git = git
     cicd.tag = tag

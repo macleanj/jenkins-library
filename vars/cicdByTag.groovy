@@ -29,7 +29,7 @@ def call() {
       def cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapUtils.merge(cicdGlobal, cicdApp)
       // In a later phase the application config will be merged as last stage to be the most leading config.
-      cicd.config.app = cicdApp
+      cicd.config.environments.app = cicdApp
 
       // Initialize logger
       // Pass it to env/'this' to be able to enable global debug (both in classes and containers)

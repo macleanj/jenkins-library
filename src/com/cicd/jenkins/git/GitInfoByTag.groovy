@@ -187,7 +187,7 @@ class GitInfoByTag {
       cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppFamilySpecific)
     }
     def Map envAppSpecific = mapUtils.deepCopy(cicd.config.environments.app)
-    cicd.job.environment = mapUtils.merge(cicd.job.environment, envAppSpecific)
+    cicd.job.environment = mapUtils.merge(cicd.job, envAppSpecific.config)
 
     cicd.git = git
     cicd.tag = tag

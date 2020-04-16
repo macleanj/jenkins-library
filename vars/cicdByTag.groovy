@@ -24,11 +24,14 @@ def call() {
       echo "master - Stage: Initialize CICD"
       checkout scm
 
-      // Merge config files. At this stage the merged config is only used for top and job level configurations like cicd.loglevel
+      // Merge Global and App config files. At this stage the merged config is only used for specific configurations like:
+      // - build environment
+      // - pr environments
+      // - cicd.loglevel
       // Note: if possible, could be moved out of "node" when workDirectory would be known beforehand
       def cicdApp = readYaml file: 'config/AppConfig.yaml'
       cicd = mapUtils.merge(cicdGlobal, cicdApp)
-      // In a later phase the application config will be merged as last stage to be the most leading config.
+      // In a later phase the application config.environments will be merged as last stage to be the most leading config.
       cicd.config.environments.app = cicdApp
 
       // Initialize logger

@@ -79,7 +79,6 @@ public getGithubByTag(String tagName, Object scm) {
   tagInfo.gitCommit = tagInfoJson.object.sha ?: 'not set'
   tagInfo.tagName = tagInfoJson.tagger.name ?: 'not set'
   tagInfo.tagDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", tagInfoJson.tagger.date) ?: 'not set'
-  tagInfo.apiUrlTag = apiUrl
 
   return tagInfo
 }
@@ -165,7 +164,6 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
     repoInfo.committerAvatar = commitInfoJson.committer.avatar_url ?: 'not set'
     repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.committer.date) ?: 'not set'
   } 
-  repoInfo.apiUrlRepo = apiUrl
 
   return repoInfo
 }

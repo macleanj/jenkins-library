@@ -18,6 +18,17 @@ public String getTagNameFromBranchName(String checkedOutBranchName) {
   return values[values.length - 1]
 }
 
+public String getApiUrl(Object scm) {
+  String gitUrl = scm.getUserRemoteConfigs()[0].url
+  Matcher matcher = (gitUrl =~ /.*:\/\/([^\/]+)\/[^\/]+\/[^\/]+.git/)
+  /*  get the value matching the group */
+  if (matcher[0][1] ==~ /.*github.com$/) {
+    return 'api.github.com'
+  } else {
+    return matcher[0][1] + '/api/v3'
+  }
+}
+
 public String getCurrentRepoName(Object scm) {
   String gitUrl = scm.getUserRemoteConfigs()[0].url
   Matcher matcher = (gitUrl =~ /.*[^\/]+\/[^\/]+\/([^\/]+).git/)
@@ -36,11 +47,12 @@ public getGithubByTag(String tagName, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
+  String  apiUrl = getApiUrl(scm)
   def getResponseTagCommit
   def getResponseTag
   GString requestedUrl
 
-  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/refs/tags/${tagName}"
+  requestedUrl = "https://${apiUrl}/repos/${accountName}/${repoName}/git/refs/tags/${tagName}"
   try {
     getResponseTagCommit = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.main.cicd.api.credentials',
@@ -51,7 +63,7 @@ public getGithubByTag(String tagName, Object scm) {
   }
   def tagCommit = new JsonSlurper().parseText(getResponseTagCommit.content).object.sha
 
-  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/git/tags/${tagCommit}"
+  requestedUrl = "https://${apiUrl}/repos/${accountName}/${repoName}/git/tags/${tagCommit}"
   try {
     getResponseTag = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.main.cicd.api.credentials',
@@ -63,10 +75,12 @@ public getGithubByTag(String tagName, Object scm) {
 
   def tagInfoJson = new JsonSlurper().parseText(getResponseTag.content)
   def tagInfo = [:]
-  tagInfo.tagCommit = tagInfoJson.sha
-  tagInfo.gitCommit = tagInfoJson.object.sha
-  tagInfo.tagName = tagInfoJson.tagger.name
-  tagInfo.tagDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", tagInfoJson.tagger.date)
+  tagInfo.tagCommit = tagInfoJson.sha ?: 'not set'
+  tagInfo.gitCommit = tagInfoJson.object.sha ?: 'not set'
+  tagInfo.tagName = tagInfoJson.tagger.name ?: 'not set'
+  tagInfo.tagDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", tagInfoJson.tagger.date) ?: 'not set'
+  tagInfo.apiUrlTag = apiUrl
+
   return tagInfo
 }
 
@@ -74,12 +88,13 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   /*  fetch the commit info*/
   String accountName = getCurrentAccountName(scm)
   String repoName = getCurrentRepoName(scm)
+  String  apiUrl = getApiUrl(scm)
   def getResponseUser
   def getResponseRepo
   def getResponseCommit
   GString requestedUrl
 
-  requestedUrl = "https://api.github.com/users/${accountName}"
+  requestedUrl = "https://${apiUrl}/users/${accountName}"
   try {
     getResponseUser = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.main.cicd.api.credentials',
@@ -89,7 +104,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
     return null
   }
 
-  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}"
+  requestedUrl = "https://${apiUrl}/repos/${accountName}/${repoName}"
   try {
     getResponseRepo = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.main.cicd.api.credentials',
@@ -99,7 +114,7 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
     return null
   }
 
-  requestedUrl = "https://api.github.com/repos/${accountName}/${repoName}/commits/${gitCommit}"
+  requestedUrl = "https://${apiUrl}/repos/${accountName}/${repoName}/commits/${gitCommit}"
   try {
     getResponseCommit = httpRequest(acceptType: 'APPLICATION_JSON',
                                   authentication: 'github.main.cicd.api.credentials',
@@ -117,23 +132,40 @@ public getGithubRepoInfo(String gitCommit, Object scm) {
   def commitInfoJson = new JsonSlurper().parseText(getResponseCommit.content)
 
   def repoInfo = [:]
-  repoInfo.repoName = repoInfoJson.name
-  repoInfo.repoFullName = repoInfoJson.full_name
-  repoInfo.repoDescription = repoInfoJson.description
-  repoInfo.repoIsPrivate = repoInfoJson["private"]
-  repoInfo.owner = repoInfoJson.owner.login
-  repoInfo.ownerName = userInfoJson.name
-  repoInfo.ownerCompany = userInfoJson.company
-  repoInfo.ownerUrl = repoInfoJson.owner.html_url
-  repoInfo.ownerAvatar = repoInfoJson.owner.avatar_url
-  repoInfo.authorName = commitInfoJson.author.login
-  repoInfo.authorUrl = commitInfoJson.author.html_url
-  repoInfo.authorAvatar = commitInfoJson.author.avatar_url
-  repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.author.date)
-  repoInfo.committerName = commitInfoJson.committer.login
-  repoInfo.committerUrl = commitInfoJson.committer.html_url
-  repoInfo.committerAvatar = commitInfoJson.committer.avatar_url
-  repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.committer.date)
+  repoInfo.repoName = repoInfoJson.name ?: 'not set'
+  repoInfo.repoFullName = repoInfoJson.full_name ?: 'not set'
+  repoInfo.repoDescription = repoInfoJson.description ?: 'not set'
+  repoInfo.repoIsPrivate = repoInfoJson["private"] ?: 'not set'
+  repoInfo.owner = repoInfoJson.owner.login ?: 'not set'
+  repoInfo.ownerName = userInfoJson.name ?: 'not set'
+  repoInfo.ownerCompany = userInfoJson.company ?: 'not set'
+  if (repoInfoJson.owner) {
+    repoInfo.ownerUrl = repoInfoJson.owner.html_url ?: 'not set'
+    repoInfo.ownerAvatar = repoInfoJson.owner.avatar_url ?: 'not set'
+  }
+  if (commitInfoJson.commit.author) {
+    repoInfo.authorName = commitInfoJson.commit.author.name ?: 'not set'
+    repoInfo.authorEmail = commitInfoJson.commit.author.email ?: 'not set'
+    repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.author.date) ?: 'not set'
+  }
+  if (commitInfoJson.author) {
+    repoInfo.authorName = commitInfoJson.author.login ?: 'not set'
+    repoInfo.authorUrl = commitInfoJson.author.html_url ?: 'not set'
+    repoInfo.authorAvatar = commitInfoJson.author.avatar_url ?: 'not set'
+    repoInfo.authorDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.author.date) ?: 'not set'
+  }
+  if (commitInfoJson.commit.committer) {
+    repoInfo.committerName = commitInfoJson.commit.committer.name ?: 'not set'
+    repoInfo.committerEmail = commitInfoJson.commit.committer.email ?: 'not set'
+    repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.committer.date) ?: 'not set'
+  }
+  if (commitInfoJson.committer) {
+    repoInfo.committerName = commitInfoJson.committer.login ?: 'not set'
+    repoInfo.committerUrl = commitInfoJson.committer.html_url ?: 'not set'
+    repoInfo.committerAvatar = commitInfoJson.committer.avatar_url ?: 'not set'
+    repoInfo.committerDate = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", commitInfoJson.commit.committer.date) ?: 'not set'
+  } 
+  repoInfo.apiUrlRepo = apiUrl
 
   return repoInfo
 }
